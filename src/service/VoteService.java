@@ -19,17 +19,17 @@ public class VoteService {
     private User currentUser = null; // Track logged-in user
 
     private VoteService() {
-        voters.add(new User("V101", "Niyati", "9999999999", "pass"));
-        voters.add(new User("V102", "Rahul", "8888888888", "pass"));
+        voters.add(new User("V101", "Niyati", "9999999999", "niyati@example.com", "pass"));
+        voters.add(new User("V102", "Rahul", "8888888888", "rahul@example.com", "pass"));
 
         candidates.add(new Candidate(1, "Alice"));
         candidates.add(new Candidate(2, "Bob"));
         candidates.add(new Candidate(3, "Charlie"));
     }
 
-    public String registerVoter(String name, String mobile, String password) {
+    public String registerVoter(String name, String mobile, String email, String password) {
         String newId = "V" + (101 + voters.size()); 
-        User newUser = new User(newId, name, mobile, password);
+        User newUser = new User(newId, name, mobile, email, password);
         voters.add(newUser);
         return newId;
     }
@@ -76,6 +76,11 @@ public class VoteService {
             if (c.getCandidateId() == candidateId) {
                 c.addVote();
                 currentUser.setHasVoted(true);
+                
+                // Notifications
+                SmsService.send(currentUser.getMobile(), "Your vote has been successfully cast. Thank you for voting!");
+                EmailService.send(currentUser.getEmail(), "Vote Confirmed", "Hello " + currentUser.getName() + ",\nYour vote has been successfully cast in the Online Voting System.\nThank you!");
+                
                 return true;
             }
         }

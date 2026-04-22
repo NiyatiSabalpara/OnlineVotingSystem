@@ -5,13 +5,15 @@ public class User {
     private String voterId;
     private String name;
     private String mobile;
+    private String email;
     private String password;
     private boolean hasVoted;
 
-    public User(String voterId, String name, String mobile, String password) {
+    public User(String voterId, String name, String mobile, String email, String password) {
         this.voterId = voterId;
         this.name = name;
         this.mobile = mobile;
+        this.email = email;
         this.password = password;
         this.hasVoted = false;
     }
@@ -26,6 +28,10 @@ public class User {
 
     public String getMobile() {
         return mobile;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {

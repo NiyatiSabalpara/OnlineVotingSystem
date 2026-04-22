@@ -34,6 +34,12 @@ public class RegisterView {
         mobile.setPromptText("Enter Mobile");
         mobile.getStyleClass().add("text-field");
 
+        Label emailLabel = new Label("Email Address");
+        emailLabel.getStyleClass().add("label");
+        TextField email = new TextField();
+        email.setPromptText("Enter Email");
+        email.getStyleClass().add("text-field");
+
         Label passLabel = new Label("Password");
         passLabel.getStyleClass().add("label");
         PasswordField pass = new PasswordField();
@@ -45,12 +51,12 @@ public class RegisterView {
         register.setPrefWidth(Double.MAX_VALUE);
 
         register.setOnAction(e -> {
-            if (name.getText().isEmpty() || mobile.getText().isEmpty() || pass.getText().isEmpty()) {
+            if (name.getText().isEmpty() || mobile.getText().isEmpty() || email.getText().isEmpty() || pass.getText().isEmpty()) {
                 new Alert(Alert.AlertType.ERROR, "Please fill all fields!").show();
                 return;
             }
 
-            String newId = VoteService.getInstance().registerVoter(name.getText(), mobile.getText(), pass.getText());
+            String newId = VoteService.getInstance().registerVoter(name.getText(), mobile.getText(), email.getText(), pass.getText());
             
             Alert success = new Alert(Alert.AlertType.INFORMATION, "Registration Successful!\nYour new Voter ID is: " + newId + "\nPlease memorize this to login.");
             success.setHeaderText("Welcome!");
@@ -67,6 +73,7 @@ public class RegisterView {
         VBox form = new VBox(15,
                 nameLabel, name,
                 mobileLabel, mobile,
+                emailLabel, email,
                 passLabel, pass,
                 new Label(""),
                 register,

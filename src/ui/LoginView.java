@@ -46,7 +46,8 @@ public class LoginView {
         Hyperlink registerLink = new Hyperlink("New voter? Register here");
         registerLink.setOnAction(e -> {
             Scene newScene = new Scene(new RegisterView(stage).getView(), 900, 600);
-            newScene.getStylesheets().add("file:src/ui/style.css");
+            String cssPath = new java.io.File("src/ui/style.css").exists() ? "file:src/ui/style.css" : "file:ui/style.css";
+            newScene.getStylesheets().add(cssPath);
             stage.setScene(newScene);
         });
 
@@ -70,17 +71,20 @@ public class LoginView {
 
             if(r.equals("VOTER")){
                 Scene newScene = new Scene(new VoterDashboard(stage).getView(), 900, 600);
-                newScene.getStylesheets().add("file:src/ui/style.css");
+                String cssPath = new java.io.File("src/ui/style.css").exists() ? "file:src/ui/style.css" : "file:ui/style.css";
+                newScene.getStylesheets().add(cssPath);
                 stage.setScene(newScene);
             }
             else if(r.equals("CANDIDATE")){
                 Scene newScene = new Scene(new CandidateDashboard(stage).getView(), 900, 600);
-                newScene.getStylesheets().add("file:src/ui/style.css");
+                String cssPath = new java.io.File("src/ui/style.css").exists() ? "file:src/ui/style.css" : "file:ui/style.css";
+                newScene.getStylesheets().add(cssPath);
                 stage.setScene(newScene);
             }
             else if(r.equals("ADMIN")){
                 Scene newScene = new Scene(new AdminDashboard(stage).getView(), 900, 600);
-                newScene.getStylesheets().add("file:src/ui/style.css");
+                String cssPath = new java.io.File("src/ui/style.css").exists() ? "file:src/ui/style.css" : "file:ui/style.css";
+                newScene.getStylesheets().add(cssPath);
                 stage.setScene(newScene);
             }
         });
