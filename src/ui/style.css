@@ -1,300 +1,1133 @@
-/* Global Theme */
+/* ================================================================
+   POLLAROID — Premium Dark Voting System Theme
+   ================================================================ */
+
+/* ---- Base ---- */
 .root {
-    -fx-background-color: #f0f4f8;
+    -fx-background-color: #0d0f1a;
     -fx-font-family: 'Segoe UI', Tahoma, Helvetica, sans-serif;
 }
 
-/* Card Style */
-.card {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-padding: 30;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 5);
+/* ================================================================
+   LANDING PAGE
+   ================================================================ */
+
+.landing-root {
+    -fx-background-color: #0d0f1a;
 }
 
-/* Header Text */
-.header-text {
-    -fx-font-size: 26px;
+.landing-gradient-bg {
+    -fx-background-color: linear-gradient(to bottom right, #0d0f1a, #13172b, #0d0f1a);
+}
+
+.landing-brand {
+    -fx-font-size: 28px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #ffffff;
+}
+
+.landing-brand-dot {
+    -fx-text-fill: #6c63ff;
+}
+
+.landing-hero-title {
+    -fx-font-size: 48px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #e8eaf6;
+    -fx-line-spacing: 4px;
+}
+
+.landing-hero-subtitle {
+    -fx-font-size: 17px;
+    -fx-text-fill: #8892b0;
+    -fx-line-spacing: 6px;
+}
+
+/* Portal Role Cards */
+.portal-card {
+    -fx-background-color: #13172b;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 30, 0, 0, 10);
+    -fx-padding: 35 30 35 30;
+    -fx-cursor: hand;
+}
+
+.portal-card:hover {
+    -fx-background-color: #1a1f38;
+    -fx-border-color: rgba(108,99,255,0.3);
+    -fx-effect: dropshadow(gaussian, rgba(108,99,255,0.25), 30, 0, 0, 0);
+}
+
+.portal-card-admin:hover {
+    -fx-border-color: rgba(108,99,255,0.4);
+    -fx-effect: dropshadow(gaussian, rgba(108,99,255,0.3), 35, 0, 0, 0);
+}
+
+.portal-card-candidate:hover {
+    -fx-border-color: rgba(0,212,255,0.4);
+    -fx-effect: dropshadow(gaussian, rgba(0,212,255,0.3), 35, 0, 0, 0);
+}
+
+.portal-card-voter:hover {
+    -fx-border-color: rgba(0,229,160,0.4);
+    -fx-effect: dropshadow(gaussian, rgba(0,229,160,0.3), 35, 0, 0, 0);
+}
+
+.portal-card-icon {
+    -fx-font-size: 36px;
+}
+
+.portal-card-title {
+    -fx-font-size: 20px;
     -fx-font-weight: 800;
-    -fx-text-fill: #102a43;
+    -fx-text-fill: #e8eaf6;
 }
 
-/* Sub-Header Text */
-.subheader-text {
-    -fx-font-size: 18px;
+.portal-card-desc {
+    -fx-font-size: 13px;
+    -fx-text-fill: #8892b0;
+    -fx-line-spacing: 4px;
+    -fx-wrap-text: true;
+}
+
+/* Landing portal-specific login buttons */
+.btn-admin-login {
+    -fx-background-color: #6c63ff;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-padding: 10 24 10 24;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.btn-admin-login:hover {
+    -fx-background-color: #5549d9;
+    -fx-effect: dropshadow(gaussian, rgba(108,99,255,0.5), 12, 0, 0, 4);
+}
+
+.btn-candidate-login {
+    -fx-background-color: #00d4ff;
+    -fx-text-fill: #0d0f1a;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-padding: 10 24 10 24;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.btn-candidate-login:hover {
+    -fx-background-color: #00b8dd;
+    -fx-effect: dropshadow(gaussian, rgba(0,212,255,0.5), 12, 0, 0, 4);
+}
+
+.btn-voter-login {
+    -fx-background-color: #00e5a0;
+    -fx-text-fill: #0d0f1a;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-padding: 10 24 10 24;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.btn-voter-login:hover {
+    -fx-background-color: #00c487;
+    -fx-effect: dropshadow(gaussian, rgba(0,229,160,0.5), 12, 0, 0, 4);
+}
+
+/* ================================================================
+   LOGIN PAGE
+   ================================================================ */
+
+.login-root {
+    -fx-background-color: #0d0f1a;
+}
+
+.login-left-panel {
+    -fx-background-color: #13172b;
+    -fx-padding: 60 50 60 50;
+}
+
+.login-left-tagline {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8892b0;
+    -fx-line-spacing: 5px;
+    -fx-wrap-text: true;
+}
+
+.login-form-pane {
+    -fx-background-color: #0d0f1a;
+    -fx-padding: 60 70 60 70;
+}
+
+.login-form-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #e8eaf6;
+}
+
+.login-form-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8892b0;
+}
+
+/* Role Badge */
+.role-badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0d0f1a;
+    -fx-background-radius: 20;
+    -fx-padding: 4 14 4 14;
+    -fx-letter-spacing: 1px;
+}
+.role-badge-admin {
+    -fx-background-color: #6c63ff;
+    -fx-text-fill: white;
+}
+.role-badge-candidate {
+    -fx-background-color: #00d4ff;
+    -fx-text-fill: #0d0f1a;
+}
+.role-badge-voter {
+    -fx-background-color: #00e5a0;
+    -fx-text-fill: #0d0f1a;
+}
+
+/* Form Elements */
+.form-label {
+    -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-text-fill: #334e68;
+    -fx-text-fill: #8892b0;
 }
 
-/* Standard Labels */
-.label {
+.form-field {
+    -fx-pref-height: 46px;
+    -fx-background-color: #13172b;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 0 15 0 15;
     -fx-font-size: 14px;
-    -fx-text-fill: #486581;
+    -fx-text-fill: #e8eaf6;
+    -fx-prompt-text-fill: #4a5568;
+}
+
+.form-field:focused {
+    -fx-border-color: #6c63ff;
+    -fx-background-color: #1a1f38;
+    -fx-effect: dropshadow(gaussian, rgba(108,99,255,0.2), 8, 0, 0, 0);
+}
+
+.form-field-cyan:focused {
+    -fx-border-color: #00d4ff;
+    -fx-effect: dropshadow(gaussian, rgba(0,212,255,0.2), 8, 0, 0, 0);
+}
+
+.form-field-teal:focused {
+    -fx-border-color: #00e5a0;
+    -fx-effect: dropshadow(gaussian, rgba(0,229,160,0.2), 8, 0, 0, 0);
+}
+
+/* Error label */
+.error-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #ff5470;
     -fx-font-weight: 600;
 }
 
-/* Inputs (TextField, PasswordField) */
-.text-field {
-    -fx-pref-height: 40px;
-    -fx-background-color: #f0f4f8;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
-    -fx-border-color: #d9e2ec;
-    -fx-border-width: 1px;
-    -fx-padding: 0 10 0 10;
-    -fx-font-size: 14px;
-    -fx-text-fill: #102a43;
+.hint-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #4a5568;
 }
 
-.text-field:focused {
-    -fx-border-color: #2684ff;
-    -fx-background-color: #ffffff;
-    -fx-effect: dropshadow(three-pass-box, rgba(38,132,255,0.2), 6, 0, 0, 0);
+.hint-box {
+    -fx-background-color: #13172b;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255,255,255,0.05);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 12 15 12 15;
 }
 
-/* ComboBox */
-.combo-box {
-    -fx-pref-height: 40px;
-    -fx-background-color: #f0f4f8;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
-    -fx-border-color: #d9e2ec;
-    -fx-border-width: 1px;
-    -fx-font-size: 14px;
-}
-
-.combo-box:focused {
-    -fx-border-color: #2684ff;
-}
-
-/* Primary Button */
-.button-primary {
-    -fx-background-color: #2684ff;
+/* Primary Buttons (login form) */
+.btn-primary-purple {
+    -fx-background-color: linear-gradient(to right, #6c63ff, #9c4dff);
     -fx-text-fill: white;
     -fx-font-size: 15px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
+    -fx-font-weight: 800;
+    -fx-background-radius: 12;
+    -fx-padding: 14 0 14 0;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.btn-primary-purple:hover {
+    -fx-background-color: linear-gradient(to right, #5549d9, #8838dd);
+    -fx-effect: dropshadow(gaussian, rgba(108,99,255,0.5), 15, 0, 0, 5);
+}
+.btn-primary-purple:pressed {
+    -fx-background-color: #4432c0;
+}
+
+.btn-primary-cyan {
+    -fx-background-color: linear-gradient(to right, #00d4ff, #0099cc);
+    -fx-text-fill: #0d0f1a;
+    -fx-font-size: 15px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 12;
+    -fx-padding: 14 0 14 0;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.btn-primary-cyan:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,212,255,0.5), 15, 0, 0, 5);
+    -fx-background-color: linear-gradient(to right, #00b8dd, #0080aa);
+}
+
+.btn-primary-teal {
+    -fx-background-color: linear-gradient(to right, #00e5a0, #00b27c);
+    -fx-text-fill: #0d0f1a;
+    -fx-font-size: 15px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 12;
+    -fx-padding: 14 0 14 0;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.btn-primary-teal:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,229,160,0.5), 15, 0, 0, 5);
+    -fx-background-color: linear-gradient(to right, #00c487, #009960);
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8892b0;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
     -fx-padding: 10 20 10 20;
     -fx-cursor: hand;
-    -fx-pref-height: 40px;
+}
+.btn-ghost:hover {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-text-fill: #e8eaf6;
 }
 
-.button-primary:hover {
-    -fx-background-color: #1e6bd6;
-    -fx-effect: dropshadow(three-pass-box, rgba(38,132,255,0.4), 8, 0, 0, 4);
+.hyperlink-text {
+    -fx-text-fill: #6c63ff;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-border-color: transparent;
+}
+.hyperlink-text:hover {
+    -fx-text-fill: #9c4dff;
 }
 
-.button-primary:pressed {
-    -fx-background-color: #1a5ab5;
-}
+/* ================================================================
+   REGISTER PAGE
+   ================================================================ */
 
-/* Secondary Button / Outline */
-.button-secondary {
-    -fx-background-color: transparent;
-    -fx-text-fill: #2684ff;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-border-color: #2684ff;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-padding: 8 20 8 20;
-    -fx-cursor: hand;
-}
-
-.button-secondary:hover {
-    -fx-background-color: rgba(38,132,255,0.05);
-}
-
-/* Layout Containers specific */
-.top-header {
-    -fx-background-color: #102a43;
-    -fx-padding: 20 30 20 30;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 2);
-}
-
-.top-header .label {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-letter-spacing: 1.5px; /* JavaFX 9+ doesn't properly support letter-spacing natively in CSS, but keeping it doesn't break anything */
-}
-
-/* Dashboard specific list items/cards */
-.candidate-card {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e4e7eb;
+.register-card {
+    -fx-background-color: #13172b;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-radius: 20;
     -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-padding: 15;
-}
-.candidate-card:hover {
-    -fx-border-color: #2684ff;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+    -fx-padding: 40 50 40 50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 40, 0, 0, 15);
 }
 
-/* Modern Admin Dashboard Specifics */
-.admin-root {
-    -fx-background-color: #f4f7fe;
-    -fx-font-family: 'Segoe UI', Tahoma, Helvetica, sans-serif;
+.register-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #e8eaf6;
 }
 
-/* Sidebar */
+.register-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8892b0;
+}
+
+.step-indicator-active {
+    -fx-background-color: #6c63ff;
+    -fx-background-radius: 50;
+    -fx-min-width: 10;
+    -fx-min-height: 10;
+    -fx-max-width: 10;
+    -fx-max-height: 10;
+}
+
+.step-indicator-inactive {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 50;
+    -fx-min-width: 10;
+    -fx-min-height: 10;
+    -fx-max-width: 10;
+    -fx-max-height: 10;
+}
+
+/* ================================================================
+   SIDEBAR (All Portals)
+   ================================================================ */
+
 .sidebar {
-    -fx-background-color: #11111d;
+    -fx-background-color: #0a0c18;
+    -fx-padding: 0;
+    -fx-border-color: rgba(255,255,255,0.05);
+    -fx-border-width: 0 1 0 0;
+}
+
+.sidebar-top {
     -fx-padding: 30 20 20 20;
 }
 
 .sidebar-brand {
-    -fx-text-fill: white;
-    -fx-font-size: 24px;
-    -fx-font-weight: 800;
+    -fx-font-size: 22px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #ffffff;
 }
 
-.sidebar-menu-btn {
+.sidebar-brand-accent {
+    -fx-text-fill: #6c63ff;
+}
+
+.sidebar-section-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #3d4466;
+    -fx-padding: 10 20 5 20;
+}
+
+.sidebar-nav-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #8b8b93;
-    -fx-font-size: 15px;
-    -fx-alignment: center-left;
-    -fx-padding: 12 15 12 15;
-    -fx-background-radius: 12;
-    -fx-cursor: hand;
-}
-
-.sidebar-menu-btn:hover {
-    -fx-text-fill: white;
-}
-
-.sidebar-menu-btn-active {
-    -fx-background-color: #1e1e2d;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-/* Top Title */
-.admin-page-title {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2b3674;
-}
-
-/* KPI Cards */
-.kpi-card {
-    -fx-background-color: white;
-    -fx-background-radius: 15;
-    -fx-padding: 20;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 10, 0, 0, 4);
-    -fx-min-width: 220px;
-}
-
-.kpi-title {
+    -fx-text-fill: #8892b0;
     -fx-font-size: 14px;
-    -fx-text-fill: #a3aed1;
     -fx-font-weight: 600;
+    -fx-alignment: center-left;
+    -fx-padding: 12 20 12 20;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-graphic-text-gap: 12;
+}
+
+.sidebar-nav-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-text-fill: #e8eaf6;
+}
+
+.sidebar-nav-btn-active {
+    -fx-background-color: rgba(108,99,255,0.12);
+    -fx-text-fill: #6c63ff;
+    -fx-font-weight: 700;
+    -fx-border-color: #6c63ff;
+    -fx-border-width: 0 0 0 3;
+}
+
+.sidebar-nav-btn-active-cyan {
+    -fx-background-color: rgba(0,212,255,0.1);
+    -fx-text-fill: #00d4ff;
+    -fx-font-weight: 700;
+    -fx-border-color: #00d4ff;
+    -fx-border-width: 0 0 0 3;
+}
+
+.sidebar-nav-btn-active-teal {
+    -fx-background-color: rgba(0,229,160,0.1);
+    -fx-text-fill: #00e5a0;
+    -fx-font-weight: 700;
+    -fx-border-color: #00e5a0;
+    -fx-border-width: 0 0 0 3;
+}
+
+.sidebar-avatar {
+    -fx-background-radius: 50;
+    -fx-min-width: 42;
+    -fx-min-height: 42;
+    -fx-max-width: 42;
+    -fx-max-height: 42;
+    -fx-alignment: center;
+    -fx-font-size: 18px;
+}
+
+.sidebar-user-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #e8eaf6;
+}
+
+.sidebar-user-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: #3d4466;
+}
+
+/* ================================================================
+   DASHBOARD CONTENT AREA
+   ================================================================ */
+
+.content-area {
+    -fx-background-color: #0d0f1a;
+    -fx-padding: 35 40 35 40;
+}
+
+.page-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #e8eaf6;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8892b0;
+}
+
+/* ================================================================
+   KPI CARDS
+   ================================================================ */
+
+.kpi-card {
+    -fx-background-color: #13172b;
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-padding: 24 24 24 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0, 0, 8);
+}
+
+.kpi-icon-box {
+    -fx-background-radius: 12;
+    -fx-min-width: 50;
+    -fx-min-height: 50;
+    -fx-max-width: 50;
+    -fx-max-height: 50;
+    -fx-alignment: center;
+    -fx-font-size: 22px;
+}
+
+.kpi-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #8892b0;
 }
 
 .kpi-value {
-    -fx-font-size: 28px;
-    -fx-text-fill: #2b3674;
+    -fx-font-size: 32px;
     -fx-font-weight: 900;
+    -fx-text-fill: #e8eaf6;
 }
 
-.kpi-trend {
+.kpi-trend-up {
     -fx-font-size: 12px;
-    -fx-text-fill: #05cd99;
-    -fx-font-weight: bold;
+    -fx-text-fill: #00e5a0;
+    -fx-font-weight: 700;
 }
 
 .kpi-trend-down {
-    -fx-text-fill: #ee5d50;
+    -fx-font-size: 12px;
+    -fx-text-fill: #ff5470;
+    -fx-font-weight: 700;
 }
 
-.kpi-icon-container {
-    -fx-background-radius: 10;
-    -fx-min-width: 45px;
-    -fx-min-height: 45px;
-    -fx-max-width: 45px;
-    -fx-max-height: 45px;
+/* ================================================================
+   GLASS / CONTENT CARDS
+   ================================================================ */
+
+.glass-card {
+    -fx-background-color: #13172b;
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-padding: 28 28 28 28;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 20, 0, 0, 6);
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #e8eaf6;
+}
+
+.card-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8892b0;
+}
+
+/* ================================================================
+   STATUS BADGES
+   ================================================================ */
+
+.badge-open {
+    -fx-background-color: rgba(0,229,160,0.15);
+    -fx-text-fill: #00e5a0;
+    -fx-font-size: 11px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 20;
+    -fx-padding: 4 12 4 12;
+}
+
+.badge-closed {
+    -fx-background-color: rgba(255,84,112,0.15);
+    -fx-text-fill: #ff5470;
+    -fx-font-size: 11px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 20;
+    -fx-padding: 4 12 4 12;
+}
+
+.badge-voted {
+    -fx-background-color: rgba(0,229,160,0.15);
+    -fx-text-fill: #00e5a0;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10 3 10;
+}
+
+.badge-not-voted {
+    -fx-background-color: rgba(136,146,176,0.15);
+    -fx-text-fill: #8892b0;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10 3 10;
+}
+
+.badge-winner {
+    -fx-background-color: rgba(255,193,7,0.2);
+    -fx-text-fill: #ffc107;
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 20;
+    -fx-padding: 4 14 4 14;
+}
+
+/* ================================================================
+   CANDIDATE VOTING CARDS (Voter Portal)
+   ================================================================ */
+
+.vote-candidate-card {
+    -fx-background-color: #13172b;
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-radius: 18;
+    -fx-border-width: 1.5;
+    -fx-padding: 25 20 25 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0, 0, 5);
+}
+
+.vote-candidate-card:hover {
+    -fx-border-color: rgba(0,229,160,0.4);
+    -fx-background-color: #14192e;
+    -fx-effect: dropshadow(gaussian, rgba(0,229,160,0.2), 20, 0, 0, 0);
+}
+
+.vote-candidate-card-selected {
+    -fx-background-color: rgba(0,229,160,0.08);
+    -fx-border-color: #00e5a0;
+    -fx-effect: dropshadow(gaussian, rgba(0,229,160,0.35), 25, 0, 0, 0);
+}
+
+.candidate-avatar {
+    -fx-background-radius: 50;
+    -fx-min-width: 56;
+    -fx-min-height: 56;
+    -fx-max-width: 56;
+    -fx-max-height: 56;
     -fx-alignment: center;
+    -fx-font-size: 26px;
 }
 
-/* Charts Card */
-.chart-card {
-    -fx-background-color: white;
-    -fx-background-radius: 15;
-    -fx-padding: 25;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 10, 0, 0, 4);
+.candidate-name-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #e8eaf6;
 }
 
-.chart-title {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2b3674;
+.candidate-party-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8892b0;
 }
 
-.chart-axis {
-    -fx-tick-label-fill: #a3aed1;
+/* ================================================================
+   SUCCESS / VOTE CONFIRMATION
+   ================================================================ */
+
+.success-card {
+    -fx-background-color: rgba(0,229,160,0.08);
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(0,229,160,0.3);
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-padding: 50 60 50 60;
+    -fx-effect: dropshadow(gaussian, rgba(0,229,160,0.2), 30, 0, 0, 0);
+}
+
+.success-icon {
+    -fx-font-size: 64px;
+}
+
+.success-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #00e5a0;
+}
+
+.success-text {
+    -fx-font-size: 15px;
+    -fx-text-fill: #8892b0;
+    -fx-wrap-text: true;
+}
+
+/* ================================================================
+   PROGRESS BAR
+   ================================================================ */
+
+.vote-progress-bar > .track {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 10;
+}
+
+.vote-progress-bar > .bar {
+    -fx-background-color: linear-gradient(to right, #6c63ff, #9c4dff);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+}
+
+.vote-progress-bar-teal > .bar {
+    -fx-background-color: linear-gradient(to right, #00e5a0, #00b27c);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+}
+
+.vote-progress-bar-cyan > .bar {
+    -fx-background-color: linear-gradient(to right, #00d4ff, #0099cc);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+}
+
+/* ================================================================
+   TABLE VIEW
+   ================================================================ */
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: rgba(255,255,255,0.04);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 36px;
+    -fx-border-width: 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #8892b0;
+    -fx-font-weight: 700;
+    -fx-font-size: 12px;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #c9cedf;
+    -fx-font-size: 13px;
+    -fx-padding: 12 15 12 15;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent rgba(255,255,255,0.04) transparent;
+}
+
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: rgba(255,255,255,0.015);
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(108,99,255,0.07);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgba(108,99,255,0.15);
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #e8eaf6;
+}
+
+/* ================================================================
+   CHART OVERRIDES
+   ================================================================ */
+
+.chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
 }
 
 .chart-plot-background {
     -fx-background-color: transparent;
 }
 
-/* Landing View Styles */
-.landing-card {
-    -fx-background-color: #FAFAFB;
-    -fx-background-radius: 20;
-    -fx-border-color: #FFFFFF;
-    -fx-border-width: 4;
-    -fx-border-radius: 20;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 20, 0, 0, 10);
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(255,255,255,0.05);
 }
 
-.landing-logo {
-    -fx-font-size: 22px;
+.chart-alternative-row-fill, .chart-alternative-column-fill {
+    -fx-fill: transparent;
+}
+
+.axis {
+    -fx-tick-label-fill: #4a5568;
+    -fx-minor-tick-visible: false;
+}
+
+.chart-title {
+    -fx-text-fill: #8892b0;
+    -fx-font-size: 13px;
+}
+
+.axis-label {
+    -fx-text-fill: #4a5568;
+    -fx-font-size: 12px;
+}
+
+.bar-chart .data0.chart-bar { -fx-bar-fill: #6c63ff; }
+.bar-chart .data1.chart-bar { -fx-bar-fill: #00d4ff; }
+.bar-chart .data2.chart-bar { -fx-bar-fill: #00e5a0; }
+.bar-chart .data3.chart-bar { -fx-bar-fill: #ff5470; }
+.bar-chart .data4.chart-bar { -fx-bar-fill: #ffc107; }
+.bar-chart .data5.chart-bar { -fx-bar-fill: #9c4dff; }
+
+.pie-chart .data0.chart-pie { -fx-pie-color: #6c63ff; }
+.pie-chart .data1.chart-pie { -fx-pie-color: #00d4ff; }
+.pie-chart .data2.chart-pie { -fx-pie-color: #00e5a0; }
+.pie-chart .data3.chart-pie { -fx-pie-color: #ff5470; }
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #8892b0;
+    -fx-font-size: 12px;
+}
+
+/* ================================================================
+   SCROLL PANE
+   ================================================================ */
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(255,255,255,0.15);
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+/* ================================================================
+   MISC UTILITY
+   ================================================================ */
+
+.divider-line {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-min-height: 1;
+    -fx-max-height: 1;
+    -fx-pref-height: 1;
+}
+
+.election-toggle-open {
+    -fx-background-color: #00e5a0;
+    -fx-text-fill: #0d0f1a;
     -fx-font-weight: 800;
-    -fx-text-fill: #343434;
+    -fx-font-size: 13px;
+    -fx-background-radius: 10;
+    -fx-padding: 10 24 10 24;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
 }
 
-.landing-title {
-    -fx-font-size: 42px;
+.election-toggle-closed {
+    -fx-background-color: #ff5470;
+    -fx-text-fill: white;
+    -fx-font-weight: 800;
+    -fx-font-size: 13px;
+    -fx-background-radius: 10;
+    -fx-padding: 10 24 10 24;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.action-btn {
+    -fx-background-color: rgba(108,99,255,0.15);
+    -fx-text-fill: #6c63ff;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(108,99,255,0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-padding: 9 20 9 20;
+    -fx-cursor: hand;
+}
+.action-btn:hover {
+    -fx-background-color: rgba(108,99,255,0.25);
+}
+
+.activity-item {
+    -fx-padding: 10 15 10 15;
+    -fx-background-color: rgba(255,255,255,0.02);
+    -fx-background-radius: 10;
+}
+
+.activity-time {
+    -fx-font-size: 11px;
+    -fx-text-fill: #3d4466;
+}
+
+.activity-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #8892b0;
+}
+
+.winner-card {
+    -fx-background-color: rgba(255,193,7,0.08);
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255,193,7,0.3);
+    -fx-border-radius: 18;
+    -fx-border-width: 1.5;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(255,193,7,0.2), 25, 0, 0, 0);
+}
+
+.winner-name {
+    -fx-font-size: 22px;
     -fx-font-weight: 900;
-    -fx-text-fill: #1D1D2B;
-    -fx-line-spacing: -2px;
+    -fx-text-fill: #ffc107;
 }
 
-.landing-subtitle {
+.winner-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #8892b0;
+}
+
+.leaderboard-rank {
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #3d4466;
+    -fx-min-width: 35;
+}
+
+.leaderboard-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #e8eaf6;
+}
+
+.leaderboard-party {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8892b0;
+}
+
+.leaderboard-votes {
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #6c63ff;
+}
+
+/* Profile card */
+.profile-avatar-large {
+    -fx-background-radius: 50;
+    -fx-min-width: 80;
+    -fx-min-height: 80;
+    -fx-max-width: 80;
+    -fx-max-height: 80;
+    -fx-alignment: center;
+    -fx-font-size: 36px;
+}
+
+.profile-field-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #3d4466;
+}
+
+.profile-field-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #c9cedf;
+}
+
+.separator-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #3d4466;
+}
+
+/* Voter ID display */
+.voter-id-display {
+    -fx-background-color: rgba(108,99,255,0.08);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(108,99,255,0.2);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 10 16 10 16;
+}
+.voter-id-text {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #6c63ff;
+    -fx-font-family: 'Courier New', monospace;
+}
+
+/* Confirm vote dialog card */
+.confirm-overlay {
+    -fx-background-color: rgba(5,6,15,0.85);
+}
+
+.confirm-card {
+    -fx-background-color: #1a1f38;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-padding: 40 50 40 50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 50, 0, 0, 20);
+}
+
+/* top-header legacy compat */
+.top-header {
+    -fx-background-color: #0a0c18;
+    -fx-padding: 15 25 15 25;
+}
+
+/* Legacy compat — keep old classes non-breaking */
+.header-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #e8eaf6;
+}
+
+.subheader-text {
     -fx-font-size: 16px;
-    -fx-text-fill: #616275;
-    -fx-line-spacing: 5px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #c9cedf;
 }
 
-.landing-btn-primary {
-    -fx-background-color: #5566A8;
+.text-field {
+    -fx-pref-height: 42px;
+    -fx-background-color: #13172b;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 0 12 0 12;
+    -fx-font-size: 14px;
+    -fx-text-fill: #e8eaf6;
+    -fx-prompt-text-fill: #4a5568;
+}
+
+.text-field:focused {
+    -fx-border-color: #6c63ff;
+    -fx-background-color: #1a1f38;
+}
+
+.label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #8892b0;
+    -fx-font-weight: 600;
+}
+
+.card {
+    -fx-background-color: #13172b;
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0, 0, 8);
+}
+
+.button-primary {
+    -fx-background-color: linear-gradient(to right, #6c63ff, #9c4dff);
     -fx-text-fill: white;
     -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 12 30 12 30;
+    -fx-font-weight: 800;
+    -fx-background-radius: 10;
+    -fx-padding: 12 20 12 20;
     -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+.button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #5549d9, #8838dd);
+    -fx-effect: dropshadow(gaussian, rgba(108,99,255,0.45), 12, 0, 0, 4);
 }
 
-.landing-btn-primary:hover {
-    -fx-background-color: #404F8A;
-    -fx-effect: dropshadow(three-pass-box, rgba(85,102,168,0.4), 8, 0, 0, 4);
-}
-
-.landing-btn-secondary {
-    -fx-background-color: #5566A8;
-    -fx-text-fill: white;
+.button-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8892b0;
     -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 8 20 8 20;
+    -fx-font-weight: 600;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10 20 10 20;
     -fx-cursor: hand;
 }
+.button-secondary:hover {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-text-fill: #e8eaf6;
+}
 
-.landing-btn-secondary:hover {
-    -fx-background-color: #404F8A;
+/* ---- Search field ---- */
+.search-field {
+    -fx-pref-height: 40px;
+    -fx-background-color: #13172b;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 0 12 0 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: #e8eaf6;
+    -fx-prompt-text-fill: #4a5568;
+}
+.search-field:focused {
+    -fx-border-color: #6c63ff;
 }

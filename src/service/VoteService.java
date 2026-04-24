@@ -16,19 +16,21 @@ public class VoteService {
 
     private List<User> voters = new ArrayList<>();
     private List<Candidate> candidates = new ArrayList<>();
-    private User currentUser = null; // Track logged-in user
+    private User currentUser = null;
+    private boolean electionOpen = true;
 
     private VoteService() {
-        voters.add(new User("V101", "Niyati", "9999999999", "niyati@example.com", "pass"));
-        voters.add(new User("V102", "Rahul", "8888888888", "rahul@example.com", "pass"));
+        voters.add(new User("V101", "Niyati Sabalpara", "9999999999", "niyati@example.com", "pass"));
+        voters.add(new User("V102", "Rahul Sharma", "8888888888", "rahul@example.com", "pass"));
+        voters.add(new User("V103", "Priya Mehta", "7777777777", "priya@example.com", "pass"));
 
-        candidates.add(new Candidate(1, "Alice"));
-        candidates.add(new Candidate(2, "Bob"));
-        candidates.add(new Candidate(3, "Charlie"));
+        candidates.add(new Candidate(1, "Alice Johnson", "Progressive Alliance"));
+        candidates.add(new Candidate(2, "Bob Williams", "National Unity Party"));
+        candidates.add(new Candidate(3, "Charlie Davis", "Democratic Front"));
     }
 
     public String registerVoter(String name, String mobile, String email, String password) {
-        String newId = "V" + (101 + voters.size()); 
+        String newId = "V" + (101 + voters.size());
         User newUser = new User(newId, name, mobile, email, password);
         voters.add(newUser);
         return newId;
@@ -38,15 +40,18 @@ public class VoteService {
      * Authenticates and returns the role based on ID/Pass.
      */
     public String authenticate(String id, String password) {
-        // Admin separate credentials
         if ("admin".equals(id) && "admin123".equals(password)) {
             return "ADMIN";
         }
-        
-        // Distinct candidate credentials
+
         if (("cand_alice".equals(id) && "pass1".equals(password)) ||
             ("cand_bob".equals(id) && "pass2".equals(password)) ||
             ("cand_charlie".equals(id) && "pass3".equals(password))) {
+
+            // Set current candidate user for portal personalization
+            if ("cand_alice".equals(id)) currentUser = new User("cand_alice", "Alice Johnson", "", "", "pass1");
+            else if ("cand_bob".equals(id)) currentUser = new User("cand_bob", "Bob Williams", "", "", "pass2");
+            else if ("cand_charlie".equals(id)) currentUser = new User("cand_charlie", "Charlie Davis", "", "", "pass3");
             return "CANDIDATE";
         }
 
@@ -56,7 +61,7 @@ public class VoteService {
                 return "VOTER";
             }
         }
-        return null; // authentication failed
+        return null;
     }
 
     public User getCurrentUser() {
@@ -68,6 +73,7 @@ public class VoteService {
     }
 
     public boolean castVote(int candidateId) {
+        if (!electionOpen) return false;
         if (currentUser == null || currentUser.hasVoted()) {
             return false;
         }
@@ -76,19 +82,63 @@ public class VoteService {
             if (c.getCandidateId() == candidateId) {
                 c.addVote();
                 currentUser.setHasVoted(true);
-                
-                // Notifications
+
                 SmsService.send(currentUser.getMobile(), "Your vote has been successfully cast. Thank you for voting!");
-                EmailService.send(currentUser.getEmail(), "Vote Confirmed", "Hello " + currentUser.getName() + ",\nYour vote has been successfully cast in the Online Voting System.\nThank you!");
-                
+                EmailService.send(currentUser.getEmail(), "Vote Confirmed",
+                        "Hello " + currentUser.getName() + ",\nYour vote has been successfully cast.\nThank you!");
+
                 return true;
             }
         }
         return false;
     }
 
+    // --- Election Control ---
+
+    public boolean isElectionOpen() {
+        return electionOpen;
+    }
+
+    public void setElectionOpen(boolean open) {
+        this.electionOpen = open;
+    }
+
+    // --- Statistics Helpers ---
+
+    public int getTotalVotesCast() {
+        int total = 0;
+        for (Candidate c : candidates) {
+            total += c.getVoteCount();
+        }
+        return total;
+    }
+
+    public double getTurnoutPercent() {
+        if (voters.isEmpty()) return 0;
+        long voted = voters.stream().filter(User::hasVoted).count();
+        return (voted * 100.0) / voters.size();
+    }
+
+    public Candidate getWinner() {
+        Candidate winner = null;
+        for (Candidate c : candidates) {
+            if (winner == null || c.getVoteCount() > winner.getVoteCount()) {
+                winner = c;
+            }
+        }
+        return winner;
+    }
+
+    public int getVoterCount() {
+        return voters.size();
+    }
+
     public List<Candidate> getCandidates() {
         return candidates;
+    }
+
+    public List<User> getVoters() {
+        return voters;
     }
 
     public List<String> getCandidateNames() {
@@ -100,10 +150,10 @@ public class VoteService {
     }
 
     public String getResults() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (Candidate c : candidates) {
-            result += c.getName() + " : " + c.getVoteCount() + " votes\n";
+            result.append(c.getName()).append(" : ").append(c.getVoteCount()).append(" votes\n");
         }
-        return result;
+        return result.toString();
     }
 }
