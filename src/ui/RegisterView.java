@@ -16,130 +16,114 @@ public class RegisterView {
 
     public RegisterView(Stage stage) {
         this.stage = stage;
-        root.setStyle("-fx-background-color: #0d0f1a;");
+        root.setStyle("-fx-background-color: " + ThemeManager.bgBase() + ";");
         buildUI();
     }
 
     private void buildUI() {
-        VBox centerBox = new VBox(0);
-        centerBox.setAlignment(Pos.CENTER);
-        centerBox.setPadding(new Insets(40));
+        VBox center = new VBox(0);
+        center.setAlignment(Pos.CENTER);
+        center.setPadding(new Insets(36));
 
-        VBox card = new VBox(20);
-        card.getStyleClass().add("register-card");
-        card.setMaxWidth(440);
+        VBox card = new VBox(18);
+        card.setStyle(ThemeManager.glassCard() + " -fx-max-width: 440;");
         card.setAlignment(Pos.TOP_LEFT);
+        card.setMaxWidth(440);
 
-        // Header
         Label badge = new Label("🗳  VOTER REGISTRATION");
-        badge.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: #00e5a0; "
-                + "-fx-background-color: rgba(0,229,160,0.1); -fx-background-radius: 20; "
-                + "-fx-padding: 4 12 4 12; -fx-border-color: rgba(0,229,160,0.2); "
+        badge.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: " + ThemeManager.accentTeal() + "; "
+                + "-fx-background-color: " + ThemeManager.voterAccentBg() + "; -fx-background-radius: 20; "
+                + "-fx-padding: 4 12 4 12; -fx-border-color: rgba(0,201,138,0.25); "
                 + "-fx-border-radius: 20; -fx-border-width: 1;");
 
         Label title = new Label("Create your account");
-        title.getStyleClass().add("register-title");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
 
         Label subtitle = new Label("Register to participate in the democratic process");
-        subtitle.getStyleClass().add("register-subtitle");
+        subtitle.setStyle("-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
 
-        // Divider
-        Region div1 = new Region();
-        div1.getStyleClass().add("divider-line");
+        Region div = makeDivider();
 
-        // Fields
-        VBox nameBox = makeField("Full Name", "Enter your full name", false);
-        TextField nameFld = (TextField) nameBox.getChildren().get(1);
+        VBox nameBox  = makeField("Full Name",      "Enter your full name",     false);
+        VBox emailBox = makeField("Email Address",  "your@email.com",           false);
+        VBox mobBox   = makeField("Mobile Number",  "10-digit phone number",    false);
+        VBox passBox  = makeField("Password",       "Create a strong password", true);
 
-        VBox emailBox = makeField("Email Address", "your@email.com", false);
-        TextField emailFld = (TextField) emailBox.getChildren().get(1);
-
-        VBox mobileBox = makeField("Mobile Number", "10-digit phone number", false);
-        TextField mobileFld = (TextField) mobileBox.getChildren().get(1);
-
-        VBox passBox = makeField("Password", "Create a strong password", true);
+        TextField   nameFld  = (TextField)   nameBox.getChildren().get(1);
+        TextField   emailFld = (TextField)   emailBox.getChildren().get(1);
+        TextField   mobFld   = (TextField)   mobBox.getChildren().get(1);
         PasswordField passFld = (PasswordField) passBox.getChildren().get(1);
 
-        // Error label
         Label errorLabel = new Label("");
-        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #ff5470; -fx-font-weight: 700;");
         errorLabel.setVisible(false);
 
-        // Register Button
-        Button registerBtn = new Button("Create Voter Account");
-        registerBtn.getStyleClass().add("btn-primary-teal");
-        registerBtn.setMaxWidth(Double.MAX_VALUE);
+        Button regBtn = new Button("Create Voter Account");
+        regBtn.setStyle("-fx-background-color: " + ThemeManager.accentTeal() + "; "
+                + "-fx-text-fill: #0d0f1a; -fx-font-size: 14px; -fx-font-weight: 800; "
+                + "-fx-background-radius: 12; -fx-padding: 12 0 12 0; -fx-cursor: hand; "
+                + "-fx-border-color: transparent;");
+        regBtn.setMaxWidth(Double.MAX_VALUE);
+        regBtn.setOnAction(e -> handleRegister(
+                nameFld.getText(), mobFld.getText(), emailFld.getText(), passFld.getText(), errorLabel));
 
-        registerBtn.setOnAction(e -> handleRegister(
-                nameFld.getText(), mobileFld.getText(), emailFld.getText(), passFld.getText(), errorLabel
-        ));
-
-        // Back link
         Button backBtn = new Button("← Back to Login");
-        backBtn.getStyleClass().add("btn-ghost");
+        backBtn.setStyle(ThemeManager.navNormal() + "-fx-max-width: 9999;");
         backBtn.setMaxWidth(Double.MAX_VALUE);
         backBtn.setOnAction(e -> root.getScene().setRoot(new LoginView(stage, "VOTER").getView()));
 
-        card.getChildren().addAll(badge, title, subtitle, div1,
-                nameBox, emailBox, mobileBox, passBox,
-                errorLabel, registerBtn, backBtn);
+        card.getChildren().addAll(badge, title, subtitle, div,
+                nameBox, emailBox, mobBox, passBox, errorLabel, regBtn, backBtn);
+        center.getChildren().add(card);
+        root.getChildren().add(center);
 
-        centerBox.getChildren().add(card);
-        root.getChildren().add(centerBox);
-
-        // Fade in
         card.setOpacity(0);
-        FadeTransition ft = new FadeTransition(Duration.millis(500), card);
-        ft.setFromValue(0); ft.setToValue(1);
-        ft.play();
+        FadeTransition ft = new FadeTransition(Duration.millis(450), card);
+        ft.setFromValue(0); ft.setToValue(1); ft.play();
     }
 
-    private VBox makeField(String labelText, String prompt, boolean isPassword) {
+    private VBox makeField(String label, String prompt, boolean isPassword) {
         VBox box = new VBox(8);
-        Label lbl = new Label(labelText);
-        lbl.getStyleClass().add("form-label");
+        Label lbl = new Label(label);
+        lbl.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
         Control field = isPassword ? new PasswordField() : new TextField();
         if (field instanceof TextField) ((TextField) field).setPromptText(prompt);
         else ((PasswordField) field).setPromptText(prompt);
-        field.getStyleClass().addAll("form-field", "form-field-teal");
+        field.setStyle("-fx-pref-height: 42px; -fx-background-color: " + ThemeManager.inputBg() + "; "
+                + "-fx-background-radius: 11; -fx-border-color: " + ThemeManager.inputBorder() + "; "
+                + "-fx-border-radius: 11; -fx-border-width: 1; -fx-padding: 0 12 0 12; "
+                + "-fx-font-size: 14px; -fx-text-fill: " + ThemeManager.textPrimary() + "; "
+                + "-fx-prompt-text-fill: " + ThemeManager.textMuted() + ";");
         box.getChildren().addAll(lbl, field);
         return box;
     }
 
-    private void handleRegister(String name, String mobile, String email, String password, Label errorLabel) {
-        if (name.isEmpty() || mobile.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showError(errorLabel, "Please fill in all fields.");
-            return;
-        }
-        if (mobile.length() < 10) {
-            showError(errorLabel, "Please enter a valid 10-digit mobile number.");
-            return;
-        }
-        if (password.length() < 4) {
-            showError(errorLabel, "Password must be at least 4 characters.");
-            return;
-        }
+    private Region makeDivider() {
+        Region r = new Region();
+        r.setStyle("-fx-background-color: " + ThemeManager.divider() + "; -fx-min-height: 1; -fx-max-height: 1;");
+        return r;
+    }
 
-        String newId = VoteService.getInstance().registerVoter(name, mobile, email, password);
+    private void handleRegister(String name, String mobile, String email, String pass, Label err) {
+        if (name.isBlank() || mobile.isBlank() || email.isBlank() || pass.isBlank()) {
+            showError(err, "Please fill in all fields."); return;
+        }
+        if (mobile.length() < 10) { showError(err, "Enter a valid 10-digit mobile number."); return; }
+        if (pass.length() < 4)    { showError(err, "Password must be at least 4 characters."); return; }
 
-        Alert success = new Alert(Alert.AlertType.INFORMATION);
-        success.setTitle("Registration Successful");
-        success.setHeaderText("Welcome, " + name + "! 🎉");
-        success.setContentText("Your Voter ID is: " + newId + "\n\nPlease remember your ID to log in.");
-        success.showAndWait();
-
+        String newId = VoteService.getInstance().registerVoter(name, mobile, email, pass);
+        Alert ok = new Alert(Alert.AlertType.INFORMATION);
+        ok.setTitle("Registration Successful"); ok.setHeaderText("Welcome, " + name + "! 🎉");
+        ok.setContentText("Your Voter ID is: " + newId + "\n\nPlease remember your ID to log in.");
+        ok.showAndWait();
         root.getScene().setRoot(new LoginView(stage, "VOTER").getView());
     }
 
-    private void showError(Label errorLabel, String message) {
-        errorLabel.setText("⚠  " + message);
-        errorLabel.setVisible(true);
-        FadeTransition ft = new FadeTransition(Duration.millis(300), errorLabel);
-        ft.setFromValue(0); ft.setToValue(1);
-        ft.play();
+    private void showError(Label lbl, String msg) {
+        lbl.setText("⚠  " + msg); lbl.setVisible(true);
+        FadeTransition ft = new FadeTransition(Duration.millis(280), lbl);
+        ft.setFromValue(0); ft.setToValue(1); ft.play();
     }
 
-    public StackPane getView() {
-        return root;
-    }
+    public StackPane getView() { return root; }
 }

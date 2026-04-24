@@ -20,14 +20,12 @@ public class CandidateDashboard {
     private Stage stage;
     private ScrollPane contentScroll;
     private Button[] navBtns;
-
-    // Identify the current candidate by name
-    private String candidateName = "Unknown";
+    private String candidateName = "Candidate";
     private Candidate myCandidate = null;
 
     public CandidateDashboard(Stage stage) {
         this.stage = stage;
-        view.setStyle("-fx-background-color: #0d0f1a;");
+        view.setStyle("-fx-background-color: " + ThemeManager.bgBase() + ";");
         detectCandidate();
         buildSidebar();
         showPanel(buildMyStatsPanel());
@@ -37,54 +35,48 @@ public class CandidateDashboard {
         User u = VoteService.getInstance().getCurrentUser();
         if (u != null) {
             candidateName = u.getName();
-            for (Candidate c : VoteService.getInstance().getCandidates()) {
-                if (c.getName().equals(candidateName)) {
-                    myCandidate = c;
-                    break;
-                }
-            }
+            VoteService.getInstance().getCandidates().stream()
+                .filter(c -> c.getName().equals(candidateName))
+                .findFirst().ifPresent(c -> myCandidate = c);
         }
     }
 
     private void buildSidebar() {
+        String accentHex = ThemeManager.accentCyan();
+
         VBox sidebar = new VBox(0);
-        sidebar.getStyleClass().add("sidebar");
-        sidebar.setPrefWidth(230);
-        sidebar.setMinWidth(230);
+        sidebar.setStyle("-fx-background-color: " + ThemeManager.sidebar() + "; "
+                + "-fx-border-color: " + ThemeManager.sidebarBorder() + "; -fx-border-width: 0 1 0 0;");
+        sidebar.setPrefWidth(220); sidebar.setMinWidth(220);
 
-        // Brand
-        HBox brandBox = new HBox(4);
-        brandBox.setAlignment(Pos.CENTER_LEFT);
-        brandBox.setPadding(new Insets(28, 20, 28, 20));
-        Label brandLabel = new Label("Pollaroid");
-        brandLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #ffffff;");
-        Label brandDot = new Label(".");
-        brandDot.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #00d4ff;");
-        brandBox.getChildren().addAll(brandLabel, brandDot);
+        HBox brand = new HBox(0); brand.setAlignment(Pos.CENTER_LEFT);
+        brand.setPadding(new Insets(24, 20, 20, 20));
+        Label bl = new Label("Pollaroid");
+        bl.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        Label bd = new Label(".");
+        bd.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + accentHex + ";");
+        brand.getChildren().addAll(bl, bd);
 
-        String[][] navItems = {
-            {"📊", "My Stats"},
-            {"🏆", "Live Results"},
-            {"📋", "Campaign Info"}
-        };
+        Label menuHdr = new Label("CANDIDATE MENU");
+        menuHdr.setStyle("-fx-font-size: 10px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textMuted()
+                + "; -fx-padding: 8 20 4 20;");
 
+        String[] icons  = {"📊","🏆","📋"};
+        String[] labels = {"My Stats","Live Results","Campaign Info"};
+        navBtns = new Button[icons.length];
         VBox navList = new VBox(2);
         navList.setPadding(new Insets(0, 10, 0, 10));
+        navList.getChildren().add(menuHdr);
 
-        Label menuHeader = new Label("CANDIDATE MENU");
-        menuHeader.getStyleClass().add("sidebar-section-label");
-        navList.getChildren().add(menuHeader);
-
-        navBtns = new Button[navItems.length];
-        for (int i = 0; i < navItems.length; i++) {
+        for (int i = 0; i < icons.length; i++) {
             final int idx = i;
-            Button btn = new Button(navItems[i][0] + "  " + navItems[i][1]);
-            btn.getStyleClass().add("sidebar-nav-btn");
-            btn.setMaxWidth(Double.MAX_VALUE);
+            Button btn = new Button(icons[i] + "   " + labels[i]);
+            btn.setStyle(ThemeManager.navNormal()); btn.setMaxWidth(Double.MAX_VALUE);
             navBtns[i] = btn;
-
+            btn.setOnMouseEntered(e -> { if (!btn.getStyle().contains(accentHex)) btn.setStyle(ThemeManager.navHover()); });
+            btn.setOnMouseExited(e  -> { if (!btn.getStyle().contains(accentHex)) btn.setStyle(ThemeManager.navNormal()); });
             btn.setOnAction(e -> {
-                setActiveNav(idx);
+                setActiveNav(idx, accentHex);
                 switch (idx) {
                     case 0: showPanel(buildMyStatsPanel()); break;
                     case 1: showPanel(buildLiveResultsPanel()); break;
@@ -93,323 +85,293 @@ public class CandidateDashboard {
             });
             navList.getChildren().add(btn);
         }
-        setActiveNav(0);
+        setActiveNav(0, accentHex);
 
         Region spacer = new Region(); VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        // Logout
-        Button logoutBtn = new Button("🚪  Logout");
-        logoutBtn.getStyleClass().add("sidebar-nav-btn");
-        logoutBtn.setStyle("-fx-text-fill: #ff5470;");
+        VBox themeSection = new VBox(4);
+        themeSection.setPadding(new Insets(0, 10, 4, 10));
+        Button themeBtn = new Button(ThemeManager.toggleLabel());
+        themeBtn.setStyle(ThemeManager.navNormal()); themeBtn.setMaxWidth(Double.MAX_VALUE);
+        themeBtn.setOnAction(e -> ThemeManager.applyToggle(view.getScene(),
+                () -> new CandidateDashboard(stage).getView()));
+        themeSection.getChildren().add(themeBtn);
+
+        VBox logoutSec = new VBox(4);
+        logoutSec.setPadding(new Insets(0, 10, 14, 10));
+        Region div = divider();
+        Button logoutBtn = new Button("🚪   Logout");
+        logoutBtn.setStyle(ThemeManager.navNormal() + "-fx-text-fill: " + ThemeManager.danger() + ";");
         logoutBtn.setMaxWidth(Double.MAX_VALUE);
-        logoutBtn.setOnAction(e -> {
-            VoteService.getInstance().logout();
-            view.getScene().setRoot(new LandingView(stage).getView());
-        });
-        VBox logoutBox = new VBox(logoutBtn);
-        logoutBox.setPadding(new Insets(0, 10, 20, 10));
+        logoutBtn.setOnAction(e -> { VoteService.getInstance().logout();
+            view.getScene().setRoot(new LandingView(stage).getView()); });
+        logoutSec.getChildren().addAll(div, logoutBtn);
 
-        // User card
-        HBox userCard = new HBox(12);
+        HBox userCard = new HBox(10);
         userCard.setAlignment(Pos.CENTER_LEFT);
-        userCard.setPadding(new Insets(15, 20, 15, 20));
-        userCard.setStyle("-fx-background-color: rgba(255,255,255,0.03); -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
+        userCard.setPadding(new Insets(14, 16, 16, 16));
+        userCard.setStyle("-fx-background-color: " + ThemeManager.activityBg() + ";");
         StackPane ava = new StackPane();
-        ava.setStyle("-fx-background-color: rgba(0,212,255,0.15); -fx-background-radius: 50; -fx-min-width: 36; -fx-min-height: 36; -fx-max-width: 36; -fx-max-height: 36;");
-        Label avaIcon = new Label("🎯"); avaIcon.setStyle("-fx-font-size: 16px;");
-        ava.getChildren().add(avaIcon);
-        VBox userInfo = new VBox(2);
-        Label uName = new Label(candidateName); uName.getStyleClass().add("sidebar-user-name"); uName.setWrapText(false);
-        Label uRole = new Label("Candidate"); uRole.getStyleClass().add("sidebar-user-role");
-        userInfo.getChildren().addAll(uName, uRole);
-        userCard.getChildren().addAll(ava, userInfo);
+        ava.setStyle("-fx-background-color: " + ThemeManager.candidateAccentBg() + "; -fx-background-radius: 50; "
+                + "-fx-min-width: 34; -fx-min-height: 34; -fx-max-width: 34; -fx-max-height: 34;");
+        Label avaIco = new Label("🎯"); avaIco.setStyle("-fx-font-size: 14px;");
+        ava.getChildren().add(avaIco);
+        VBox um = new VBox(2);
+        Label uNm = new Label(candidateName);
+        uNm.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        Label uRl = new Label("Candidate");
+        uRl.setStyle("-fx-font-size: 11px; -fx-text-fill: " + ThemeManager.textMuted() + ";");
+        um.getChildren().addAll(uNm, uRl);
+        userCard.getChildren().addAll(ava, um);
 
-        sidebar.getChildren().addAll(brandBox, navList, spacer, logoutBox, userCard);
+        sidebar.getChildren().addAll(brand, navList, spacer, themeSection, logoutSec, userCard);
 
         contentScroll = new ScrollPane();
         contentScroll.setFitToWidth(true);
-        contentScroll.setStyle("-fx-background-color: transparent; -fx-background: #0d0f1a;");
-
+        contentScroll.setStyle("-fx-background-color: transparent; -fx-background: "
+                + ThemeManager.bgBase() + "; -fx-border-color: transparent;");
         view.setLeft(sidebar);
         view.setCenter(contentScroll);
     }
 
-    private void setActiveNav(int activeIdx) {
+    private void setActiveNav(int idx, String accent) {
         if (navBtns == null) return;
-        for (int i = 0; i < navBtns.length; i++) {
-            navBtns[i].getStyleClass().removeAll("sidebar-nav-btn-active-cyan");
-            if (i == activeIdx) navBtns[i].getStyleClass().add("sidebar-nav-btn-active-cyan");
-        }
+        for (int i = 0; i < navBtns.length; i++)
+            navBtns[i].setStyle(i == idx ? ThemeManager.navActive(accent) : ThemeManager.navNormal());
     }
 
     private void showPanel(VBox panel) {
         contentScroll.setContent(panel);
         panel.setOpacity(0);
-        FadeTransition ft = new FadeTransition(Duration.millis(300), panel);
-        ft.setFromValue(0); ft.setToValue(1);
-        ft.play();
+        FadeTransition ft = new FadeTransition(Duration.millis(260), panel);
+        ft.setFromValue(0); ft.setToValue(1); ft.play();
     }
 
-    // ================================================================
-    // PANEL 1: MY STATS
-    // ================================================================
+    // ── PANEL 1: MY STATS ────────────────────────────────────────────
     private VBox buildMyStatsPanel() {
-        VBox panel = new VBox(28);
-        panel.getStyleClass().add("content-area");
-
-        VBox pageHeader = new VBox(6);
-        Label title = new Label("My Campaign Stats");
-        title.getStyleClass().add("page-title");
-        Label sub = new Label("Welcome back, " + candidateName + ". Here's your live election standing.");
-        sub.getStyleClass().add("page-subtitle");
-        pageHeader.getChildren().addAll(title, sub);
+        VBox panel = panelBase();
+        VBox hdr = new VBox(4);
+        Label t = new Label("My Campaign Stats");
+        t.setStyle("-fx-font-size: 23px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        Label s = new Label("Welcome back, " + candidateName + ". Here's your live standing.");
+        s.setStyle("-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
+        hdr.getChildren().addAll(t, s);
 
         VoteService vs = VoteService.getInstance();
         int myVotes = myCandidate != null ? myCandidate.getVoteCount() : 0;
-        int totalVotes = vs.getTotalVotesCast();
-        double myShare = totalVotes > 0 ? (myVotes * 100.0 / totalVotes) : 0;
-        int myRank = computeRank();
+        int tot = vs.getTotalVotesCast();
+        double share = tot > 0 ? myVotes * 100.0 / tot : 0;
+        int rank = computeRank();
 
-        // KPIs
-        HBox kpiRow = new HBox(15);
+        HBox kpiRow = new HBox(14);
         kpiRow.getChildren().addAll(
-            makeKpiCard("🗳️", "My Votes", String.valueOf(myVotes), "Live count", true, "rgba(0,212,255,0.12)"),
-            makeKpiCard("📊", "Total Cast", String.valueOf(totalVotes), "All candidates", true, "rgba(108,99,255,0.12)"),
-            makeKpiCard("🏅", "My Rank", "#" + myRank, "Current position", myRank == 1, "rgba(255,193,7,0.12)"),
-            makeKpiCard("📈", "Vote Share", String.format("%.1f%%", myShare), "Of total votes", true, "rgba(0,229,160,0.12)")
+            kpi("🗳️","My Votes",  String.valueOf(myVotes), "Live count",    true,  ThemeManager.candidateAccentBg()),
+            kpi("📊","Total Cast",String.valueOf(tot),     "All candidates",true,  ThemeManager.adminAccentBg()),
+            kpi("🏅","My Rank",   "#"+rank,                "Position",      rank==1, "rgba(255,193,7,0.15)"),
+            kpi("📈","Vote Share",String.format("%.1f%%",share),"Of total",  true,  ThemeManager.voterAccentBg())
         );
 
-        // Chart — Compare all candidates
-        VBox chartCard = new VBox(15);
-        chartCard.getStyleClass().add("glass-card");
+        // Bar chart
+        VBox chartCard = glass();
+        chartCard.getChildren().add(cTitle("Vote Comparison — All Candidates"));
+        CategoryAxis xA = new CategoryAxis(); NumberAxis yA = new NumberAxis();
+        BarChart<String,Number> bar = new BarChart<>(xA, yA);
+        bar.setLegendVisible(false); bar.setAnimated(false); bar.setMinHeight(230);
+        bar.setStyle("-fx-background-color: transparent;");
+        XYChart.Series<String,Number> ser = new XYChart.Series<>();
+        vs.getCandidates().forEach(c -> ser.getData().add(new XYChart.Data<>(c.getName(), c.getVoteCount())));
+        bar.getData().add(ser);
+        chartCard.getChildren().add(bar);
 
-        HBox chartHeader = new HBox(10);
-        chartHeader.setAlignment(Pos.CENTER_LEFT);
-        Label chartTitle = new Label("Vote Comparison — All Candidates");
-        chartTitle.getStyleClass().add("card-title");
-        Region spacer = new Region(); HBox.setHgrow(spacer, Priority.ALWAYS);
-        Label liveTag = new Label("● LIVE");
-        liveTag.setStyle("-fx-font-size: 11px; -fx-text-fill: #00e5a0; -fx-font-weight: 800;");
-        chartHeader.getChildren().addAll(chartTitle, spacer, liveTag);
-
-        CategoryAxis xAxis = new CategoryAxis();
-        NumberAxis yAxis = new NumberAxis();
-        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setLegendVisible(false);
-        barChart.setAnimated(false);
-        barChart.setMinHeight(240);
-        barChart.getStyleClass().add("chart");
-
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        for (Candidate c : vs.getCandidates()) {
-            XYChart.Data<String, Number> d = new XYChart.Data<>(c.getName(), c.getVoteCount());
-            series.getData().add(d);
-        }
-        barChart.getData().add(series);
-
-        chartCard.getChildren().addAll(chartHeader, barChart);
-
-        // Progress bars card
-        VBox progressCard = new VBox(15);
-        progressCard.getStyleClass().add("glass-card");
-        Label progTitle = new Label("Vote Progress by Candidate");
-        progTitle.getStyleClass().add("card-title");
-        progressCard.getChildren().add(progTitle);
-
-        String[] pbColors = {"vote-progress-bar-cyan", "vote-progress-bar", "vote-progress-bar-teal"};
-        String[] hexColors = {"#00d4ff", "#6c63ff", "#00e5a0"};
+        // Progress bars
+        VBox progCard = glass();
+        progCard.getChildren().add(cTitle("Vote Progress"));
+        String[] clrs = {ThemeManager.accentCyan(), ThemeManager.accent(), ThemeManager.accentTeal()};
+        String[] pbc  = {"vote-progress-bar-cyan","vote-progress-bar","vote-progress-bar-teal"};
         int ci = 0;
         for (Candidate c : vs.getCandidates()) {
-            VBox pRow = new VBox(6);
-            HBox labelRow = new HBox(10); labelRow.setAlignment(Pos.CENTER_LEFT);
-            Label cn = new Label(c.getName()); cn.setStyle("-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: " + hexColors[ci % 3] + ";");
-            Region r = new Region(); HBox.setHgrow(r, Priority.ALWAYS);
-            Label vt = new Label(c.getVoteCount() + " votes"); vt.setStyle("-fx-font-size: 12px; -fx-text-fill: #8892b0;");
+            VBox pRow = new VBox(5);
+            HBox lr = new HBox(10); lr.setAlignment(Pos.CENTER_LEFT);
+            Label cn = new Label(c.getName());
+            cn.setStyle("-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: " + clrs[ci%3] + ";");
             if (c.equals(myCandidate)) {
-                Label you = new Label("You"); you.setStyle("-fx-font-size: 10px; -fx-text-fill: #00d4ff; -fx-font-weight: 800; "
-                        + "-fx-background-color: rgba(0,212,255,0.1); -fx-background-radius: 10; -fx-padding: 2 8 2 8;");
-                labelRow.getChildren().addAll(cn, you, r, vt);
+                Label you = new Label("YOU");
+                you.setStyle("-fx-font-size: 9px; -fx-font-weight: 800; -fx-text-fill: " + ThemeManager.accentCyan()
+                        + "; -fx-background-radius: 8; -fx-padding: 1 6 1 6; "
+                        + "-fx-background-color: " + ThemeManager.candidateAccentBg() + ";");
+                lr.getChildren().addAll(cn, you);
             } else {
-                labelRow.getChildren().addAll(cn, r, vt);
+                lr.getChildren().add(cn);
             }
-            ProgressBar pb = new ProgressBar(totalVotes > 0 ? (double)c.getVoteCount()/totalVotes : 0);
-            pb.setMaxWidth(Double.MAX_VALUE); pb.setPrefHeight(10);
-            pb.getStyleClass().add(pbColors[ci % 3]);
-            pRow.getChildren().addAll(labelRow, pb);
-            progressCard.getChildren().add(pRow);
-            ci++;
+            Region r = new Region(); HBox.setHgrow(r, Priority.ALWAYS);
+            Label vt = new Label(c.getVoteCount()+" votes");
+            vt.setStyle("-fx-font-size: 12px; -fx-text-fill: " + ThemeManager.textMuted() + ";");
+            lr.getChildren().addAll(r, vt);
+            ProgressBar pb = new ProgressBar(tot > 0 ? (double)c.getVoteCount()/tot : 0);
+            pb.setMaxWidth(Double.MAX_VALUE); pb.setPrefHeight(9);
+            pb.getStyleClass().add(pbc[ci%3]);
+            pRow.getChildren().addAll(lr, pb);
+            progCard.getChildren().add(pRow); ci++;
         }
 
-        panel.getChildren().addAll(pageHeader, kpiRow, chartCard, progressCard);
+        panel.getChildren().addAll(hdr, kpiRow, chartCard, progCard);
         return panel;
     }
 
-    // ================================================================
-    // PANEL 2: LIVE RESULTS
-    // ================================================================
+    // ── PANEL 2: LIVE RESULTS ────────────────────────────────────────
     private VBox buildLiveResultsPanel() {
-        VBox panel = new VBox(25);
-        panel.getStyleClass().add("content-area");
-
+        VBox panel = panelBase();
         Label title = new Label("Live Results");
-        title.getStyleClass().add("page-title");
+        title.setStyle("-fx-font-size: 23px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
 
         VoteService vs = VoteService.getInstance();
         Candidate leader = vs.getWinner();
-
-        // Leader card
         if (leader != null && leader.getVoteCount() > 0) {
-            HBox winnerCard = new HBox(20);
-            winnerCard.getStyleClass().add("winner-card");
-            winnerCard.setAlignment(Pos.CENTER_LEFT);
-            Label wTrophy = new Label("🏆"); wTrophy.setStyle("-fx-font-size: 36px;");
-            VBox wInfo = new VBox(4);
-            Label wLabel = new Label("CURRENTLY LEADING"); wLabel.getStyleClass().add("winner-label");
-            Label wName = new Label(leader.getName()); wName.getStyleClass().add("winner-name");
-            Label wVotes = new Label(leader.getVoteCount() + " votes · " + leader.getParty());
-            wVotes.getStyleClass().add("winner-label");
-            wInfo.getChildren().addAll(wLabel, wName, wVotes);
-            winnerCard.getChildren().addAll(wTrophy, wInfo);
-            panel.getChildren().addAll(title, winnerCard);
+            panel.getChildren().addAll(title, winnerCard(leader));
         } else {
             panel.getChildren().add(title);
         }
 
-        // Pie + Leaderboard
-        HBox chartsRow = new HBox(20);
+        HBox charts = new HBox(16);
+        VBox pieCard = glass(); HBox.setHgrow(pieCard, Priority.ALWAYS);
+        pieCard.getChildren().add(cTitle("Vote Distribution"));
+        ObservableList<PieChart.Data> pd = FXCollections.observableArrayList();
+        vs.getCandidates().forEach(c -> pd.add(new PieChart.Data(c.getName()+" ("+c.getVoteCount()+")", Math.max(c.getVoteCount(),1))));
+        PieChart pie = new PieChart(pd); pie.setLegendVisible(true); pie.setLabelsVisible(true);
+        pie.setMinHeight(250); pieCard.getChildren().add(pie);
 
-        VBox pieCard = new VBox(15);
-        pieCard.getStyleClass().add("glass-card");
-        HBox.setHgrow(pieCard, Priority.ALWAYS);
-        Label pieTitle = new Label("Vote Distribution");
-        pieTitle.getStyleClass().add("card-title");
-        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
-        for (Candidate c : vs.getCandidates())
-            pieData.add(new PieChart.Data(c.getName() + " (" + c.getVoteCount() + ")", Math.max(c.getVoteCount(), 1)));
-        PieChart pie = new PieChart(pieData);
-        pie.setLegendVisible(true);
-        pie.setLabelsVisible(true);
-        pie.setMinHeight(250);
-        pieCard.getChildren().addAll(pieTitle, pie);
-
-        VBox lbCard = new VBox(12);
-        lbCard.getStyleClass().add("glass-card");
-        lbCard.setPrefWidth(300);
-        Label lbTitle = new Label("Standings");
-        lbTitle.getStyleClass().add("card-title");
-        lbCard.getChildren().add(lbTitle);
-
-        int rank = 1; int lbTotal = vs.getTotalVotesCast();
-        String[] lbColors = {"#ffc107", "#6c63ff", "#00d4ff"};
-        for (Candidate c : vs.getCandidates()) {
-            HBox row = new HBox(12); row.setAlignment(Pos.CENTER_LEFT); row.setPadding(new Insets(8, 0, 8, 0));
-            Label rnk = new Label("#" + rank);
-            rnk.setStyle("-fx-font-size: 16px; -fx-font-weight: 900; -fx-text-fill: " + lbColors[Math.min(rank-1,2)] + "; -fx-min-width: 35;");
-            VBox info = new VBox(3); HBox.setHgrow(info, Priority.ALWAYS);
-            Label cn = new Label(c.getName()); cn.getStyleClass().add("leaderboard-name");
-            boolean isMe = c.equals(myCandidate);
-            if (isMe) {
-                HBox nameRow = new HBox(8); nameRow.setAlignment(Pos.CENTER_LEFT);
-                Label you = new Label("YOU"); you.setStyle("-fx-font-size: 9px; -fx-text-fill: #00d4ff; -fx-font-weight: 800; "
-                        +"-fx-background-color: rgba(0,212,255,0.1); -fx-background-radius: 8; -fx-padding: 1 6 1 6;");
-                nameRow.getChildren().addAll(cn, you);
-                info.getChildren().add(nameRow);
-            } else {
-                info.getChildren().add(cn);
-            }
-            Label cp = new Label(c.getParty()); cp.getStyleClass().add("leaderboard-party");
-            info.getChildren().add(cp);
-            Label vt = new Label(String.valueOf(c.getVoteCount())); vt.getStyleClass().add("leaderboard-votes");
-            row.getChildren().addAll(rnk, info, vt);
-            lbCard.getChildren().add(row);
-            rank++;
-        }
-
-        chartsRow.getChildren().addAll(pieCard, lbCard);
-        panel.getChildren().add(chartsRow);
+        VBox lb = leaderboard(vs); lb.setPrefWidth(300);
+        charts.getChildren().addAll(pieCard, lb);
+        panel.getChildren().add(charts);
         return panel;
     }
 
-    // ================================================================
-    // PANEL 3: CAMPAIGN INFO
-    // ================================================================
+    // ── PANEL 3: CAMPAIGN INFO ───────────────────────────────────────
     private VBox buildCampaignInfoPanel() {
-        VBox panel = new VBox(25);
-        panel.getStyleClass().add("content-area");
-
+        VBox panel = panelBase();
         Label title = new Label("Campaign Info");
-        title.getStyleClass().add("page-title");
+        title.setStyle("-fx-font-size: 23px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
 
-        VBox profileCard = new VBox(20);
-        profileCard.getStyleClass().add("glass-card");
-        profileCard.setMaxWidth(520);
-
+        VBox card = glass(); card.setMaxWidth(500);
         StackPane ava = new StackPane();
-        ava.setStyle("-fx-background-color: rgba(0,212,255,0.15); -fx-background-radius: 50; "
-                + "-fx-min-width: 80; -fx-min-height: 80; -fx-max-width: 80; -fx-max-height: 80;");
-        Label avaIcon = new Label("🎯"); avaIcon.setStyle("-fx-font-size: 36px;");
-        ava.getChildren().add(avaIcon);
+        ava.setStyle("-fx-background-color: " + ThemeManager.candidateAccentBg() + "; -fx-background-radius: 50; "
+                + "-fx-min-width: 72; -fx-min-height: 72; -fx-max-width: 72; -fx-max-height: 72;");
+        Label avaIco = new Label("🎯"); avaIco.setStyle("-fx-font-size: 32px;");
+        ava.getChildren().add(avaIco);
 
-        Label nameLabel = new Label(candidateName);
-        nameLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: 900; -fx-text-fill: #e8eaf6;");
-        Label partyLabel = new Label(myCandidate != null ? myCandidate.getParty() : "Independent");
-        partyLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #00d4ff;");
+        Label nm = new Label(candidateName);
+        nm.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        Label py = new Label(myCandidate != null ? myCandidate.getParty() : "Independent");
+        py.setStyle("-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.accentCyan() + ";");
 
-        Region div = new Region(); div.getStyleClass().add("divider-line");
-        Label secTitle = new Label("Candidate Details"); secTitle.getStyleClass().add("card-title");
-
-        VBox fields = new VBox(14);
+        Region dv = divider();
+        card.getChildren().add(cTitle("Candidate Details"));
+        VBox fields = new VBox(13);
         fields.getChildren().addAll(
-            makeProfileField("Candidate ID", myCandidate != null ? "CAND-00" + myCandidate.getCandidateId() : "-"),
-            makeProfileField("Full Name", candidateName),
-            makeProfileField("Party Affiliation", myCandidate != null ? myCandidate.getParty() : "Independent"),
-            makeProfileField("Current Votes", myCandidate != null ? String.valueOf(myCandidate.getVoteCount()) : "0"),
-            makeProfileField("Current Rank", "#" + computeRank()),
-            makeProfileField("Election", "General Election 2026")
+            pRow("Candidate ID", myCandidate != null ? "CAND-00"+myCandidate.getCandidateId() : "-"),
+            pRow("Full Name", candidateName),
+            pRow("Party", myCandidate != null ? myCandidate.getParty() : "Independent"),
+            pRow("Current Votes", myCandidate != null ? String.valueOf(myCandidate.getVoteCount()) : "0"),
+            pRow("Current Rank", "#"+computeRank()),
+            pRow("Election", "General Election 2026")
         );
-
-        profileCard.getChildren().addAll(ava, nameLabel, partyLabel, div, secTitle, fields);
-        panel.getChildren().addAll(title, profileCard);
+        card.getChildren().addAll(ava, nm, py, dv, fields);
+        panel.getChildren().addAll(title, card);
         return panel;
     }
 
-    // ================================================================
-    // HELPERS
-    // ================================================================
+    // ── HELPERS ──────────────────────────────────────────────────────
     private int computeRank() {
         if (myCandidate == null) return 0;
-        int rank = 1;
-        for (Candidate c : VoteService.getInstance().getCandidates()) {
-            if (!c.equals(myCandidate) && c.getVoteCount() > myCandidate.getVoteCount()) rank++;
+        int r = 1;
+        for (Candidate c : VoteService.getInstance().getCandidates())
+            if (!c.equals(myCandidate) && c.getVoteCount() > myCandidate.getVoteCount()) r++;
+        return r;
+    }
+
+    private VBox panelBase() {
+        VBox p = new VBox(22); p.setPadding(new Insets(30, 34, 30, 34));
+        p.setStyle("-fx-background-color: " + ThemeManager.bgBase() + ";"); return p;
+    }
+
+    private VBox glass() {
+        VBox v = new VBox(12); v.setStyle(ThemeManager.glassCard()); return v;
+    }
+
+    private Label cTitle(String t) {
+        Label l = new Label(t); l.setStyle("-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        return l;
+    }
+
+    private Region divider() {
+        Region r = new Region();
+        r.setStyle("-fx-background-color: " + ThemeManager.divider() + "; -fx-min-height: 1; -fx-max-height: 1;");
+        return r;
+    }
+
+    private VBox kpi(String icon, String lbl, String val, String trend, boolean pos, String bg) {
+        VBox c = new VBox(9);
+        c.setStyle("-fx-background-color: " + ThemeManager.cardBg() + "; -fx-background-radius: 15; "
+                + "-fx-border-color: " + ThemeManager.border() + "; -fx-border-radius: 15; "
+                + "-fx-border-width: 1; -fx-padding: 18 18 18 18;");
+        HBox.setHgrow(c, Priority.ALWAYS);
+        StackPane ib = new StackPane();
+        ib.setStyle("-fx-background-color: " + bg + "; -fx-background-radius: 11; -fx-min-width: 44; -fx-min-height: 44; -fx-max-width: 44; -fx-max-height: 44;");
+        Label ii = new Label(icon); ii.setStyle("-fx-font-size: 19px;"); ib.getChildren().add(ii);
+        Label l = new Label(lbl); l.setStyle("-fx-font-size: 11px; -fx-text-fill: " + ThemeManager.textSecondary() + "; -fx-font-weight: 700;");
+        Label v = new Label(val); v.setStyle("-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        Label tr = new Label((pos?"↑ ":"↓ ")+trend); tr.setStyle("-fx-font-size: 11px; -fx-text-fill: " + (pos?"#00c98a":"#ff5470") + "; -fx-font-weight: 700;");
+        c.getChildren().addAll(ib, l, v, tr); return c;
+    }
+
+    private HBox winnerCard(Candidate w) {
+        HBox card = new HBox(15); card.setAlignment(Pos.CENTER_LEFT);
+        card.setStyle("-fx-background-color: rgba(255,193,7,0.08); -fx-background-radius: 14; "
+                + "-fx-border-color: rgba(255,193,7,0.28); -fx-border-width: 1; -fx-border-radius: 14; "
+                + "-fx-padding: 16 20 16 20;");
+        Label tr = new Label("🏆"); tr.setStyle("-fx-font-size: 30px;");
+        VBox wi = new VBox(3);
+        Label wl = new Label("CURRENTLY LEADING"); wl.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: #ffc107;");
+        Label wn = new Label(w.getName()); wn.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #ffc107;");
+        Label ws = new Label(w.getVoteCount()+" votes · "+w.getParty()); ws.setStyle("-fx-font-size: 12px; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
+        wi.getChildren().addAll(wl, wn, ws);
+        card.getChildren().addAll(tr, wi); return card;
+    }
+
+    private VBox leaderboard(VoteService vs) {
+        VBox lb = glass(); lb.getChildren().add(cTitle("Standings"));
+        int rank = 1; int tot = vs.getTotalVotesCast();
+        String[] rc  = {"#ffc107", ThemeManager.accent(), ThemeManager.accentCyan()};
+        String[] pbc = {"vote-progress-bar","vote-progress-bar-cyan","vote-progress-bar-teal"};
+        for (Candidate c : vs.getCandidates()) {
+            VBox rBox = new VBox(5); rBox.setPadding(new Insets(7,0,7,0));
+            HBox top = new HBox(9); top.setAlignment(Pos.CENTER_LEFT);
+            Label rk = new Label("#"+rank); rk.setStyle("-fx-font-size: 16px; -fx-font-weight: 900; -fx-text-fill: "+rc[Math.min(rank-1,2)]+"; -fx-min-width: 30;");
+            VBox inf = new VBox(2); HBox.setHgrow(inf,Priority.ALWAYS);
+            Label cn = new Label(c.getName()); cn.setStyle("-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: "+ThemeManager.textPrimary()+";");
+            if (c.equals(myCandidate)) {
+                Label you = new Label("YOU"); you.setStyle("-fx-font-size: 9px; -fx-font-weight: 800; -fx-text-fill: "+ThemeManager.accentCyan()+"; -fx-background-color: "+ThemeManager.candidateAccentBg()+"; -fx-background-radius: 8; -fx-padding: 1 6 1 6;");
+                HBox nr = new HBox(7, cn, you); nr.setAlignment(Pos.CENTER_LEFT);
+                inf.getChildren().add(nr);
+            } else { inf.getChildren().add(cn); }
+            Label cp = new Label(c.getParty()); cp.setStyle("-fx-font-size: 11px; -fx-text-fill: "+ThemeManager.textSecondary()+";");
+            inf.getChildren().add(cp);
+            Label vt = new Label(String.valueOf(c.getVoteCount())); vt.setStyle("-fx-font-size: 17px; -fx-font-weight: 900; -fx-text-fill: "+rc[Math.min(rank-1,2)]+";");
+            top.getChildren().addAll(rk, inf, vt);
+            ProgressBar pb = new ProgressBar(tot>0?(double)c.getVoteCount()/tot:0);
+            pb.setMaxWidth(Double.MAX_VALUE); pb.setPrefHeight(7); pb.getStyleClass().add(pbc[Math.min(rank-1,2)]);
+            rBox.getChildren().addAll(top,pb);
+            lb.getChildren().add(rBox); rank++;
         }
-        return rank;
+        return lb;
     }
 
-    private VBox makeKpiCard(String icon, String label, String value, String trend, boolean positive, String iconBg) {
-        VBox card = new VBox(12);
-        card.getStyleClass().add("kpi-card");
-        HBox.setHgrow(card, Priority.ALWAYS);
-        StackPane iconBox = new StackPane();
-        iconBox.setStyle("-fx-background-color: " + iconBg + "; -fx-background-radius: 12; -fx-min-width: 48; -fx-min-height: 48; -fx-max-width: 48; -fx-max-height: 48;");
-        Label iconLabel = new Label(icon); iconLabel.setStyle("-fx-font-size: 22px;");
-        iconBox.getChildren().add(iconLabel);
-        Label lbl = new Label(label); lbl.getStyleClass().add("kpi-label");
-        Label val = new Label(value); val.getStyleClass().add("kpi-value");
-        Label tr = new Label((positive ? "↑" : "↓") + " " + trend);
-        tr.getStyleClass().add(positive ? "kpi-trend-up" : "kpi-trend-down");
-        card.getChildren().addAll(iconBox, lbl, val, tr);
-        return card;
+    private HBox pRow(String lbl, String val) {
+        HBox r = new HBox(18); r.setAlignment(Pos.CENTER_LEFT);
+        Label l = new Label(lbl); l.setStyle("-fx-font-size: 11px; -fx-text-fill: " + ThemeManager.textMuted() + "; -fx-font-weight: 700; -fx-min-width: 150;");
+        Label v = new Label(val); v.setStyle("-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textSecondary() + "; -fx-font-weight: 600;");
+        r.getChildren().addAll(l, v); return r;
     }
 
-    private HBox makeProfileField(String label, String value) {
-        HBox row = new HBox(20); row.setAlignment(Pos.CENTER_LEFT);
-        Label lbl = new Label(label); lbl.getStyleClass().add("profile-field-label"); lbl.setMinWidth(160);
-        Label val = new Label(value); val.getStyleClass().add("profile-field-value");
-        row.getChildren().addAll(lbl, val);
-        return row;
-    }
-
-    public BorderPane getView() {
-        return view;
-    }
+    public BorderPane getView() { return view; }
 }

@@ -1,0 +1,109 @@
+/* ================================================================
+   POLLAROID — Light Theme CSS
+   ================================================================ */
+
+/* ---- Base ---- */
+.root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: 'Segoe UI', Tahoma, Helvetica, sans-serif;
+}
+
+/* ── Progress Bars ─────────────────────────────────────────────── */
+.vote-progress-bar > .track {
+    -fx-background-color: rgba(0,0,0,0.07);
+    -fx-background-radius: 10;
+}
+.vote-progress-bar > .bar {
+    -fx-background-color: linear-gradient(to right, #6c63ff, #9c4dff);
+    -fx-background-radius: 10; -fx-background-insets: 0;
+}
+.vote-progress-bar-teal > .track {
+    -fx-background-color: rgba(0,0,0,0.07); -fx-background-radius: 10;
+}
+.vote-progress-bar-teal > .bar {
+    -fx-background-color: linear-gradient(to right, #00c98a, #009966);
+    -fx-background-radius: 10; -fx-background-insets: 0;
+}
+.vote-progress-bar-cyan > .track {
+    -fx-background-color: rgba(0,0,0,0.07); -fx-background-radius: 10;
+}
+.vote-progress-bar-cyan > .bar {
+    -fx-background-color: linear-gradient(to right, #0099cc, #0077aa);
+    -fx-background-radius: 10; -fx-background-insets: 0;
+}
+
+/* ── Charts ───────────────────────────────────────────────────── */
+.chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(0,0,0,0.06);
+}
+.chart-alternative-row-fill, .chart-alternative-column-fill {
+    -fx-fill: transparent;
+}
+.axis {
+    -fx-tick-label-fill: #9aa0b4;
+    -fx-minor-tick-visible: false;
+}
+.chart-title { -fx-text-fill: #5a6280; -fx-font-size: 13px; }
+.axis-label  { -fx-text-fill: #9aa0b4; -fx-font-size: 12px; }
+
+/* Series colours */
+.bar-chart .data0.chart-bar { -fx-bar-fill: #6c63ff; }
+.bar-chart .data1.chart-bar { -fx-bar-fill: #0099cc; }
+.bar-chart .data2.chart-bar { -fx-bar-fill: #00c98a; }
+.bar-chart .data3.chart-bar { -fx-bar-fill: #ff5470; }
+.bar-chart .data4.chart-bar { -fx-bar-fill: #ffc107; }
+.bar-chart .data5.chart-bar { -fx-bar-fill: #9c4dff; }
+
+.pie-chart .data0.chart-pie { -fx-pie-color: #6c63ff; }
+.pie-chart .data1.chart-pie { -fx-pie-color: #0099cc; }
+.pie-chart .data2.chart-pie { -fx-pie-color: #00c98a; }
+.pie-chart .data3.chart-pie { -fx-pie-color: #ff5470; }
+
+.chart-legend { -fx-background-color: transparent; }
+.chart-legend-item { -fx-text-fill: #5a6280; -fx-font-size: 12px; }
+
+/* ── Table View ───────────────────────────────────────────────── */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: rgba(0,0,0,0.05);
+}
+.table-view .column-header-background {
+    -fx-background-color: rgba(0,0,0,0.03);
+    -fx-background-radius: 10 10 0 0;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 36px; -fx-border-width: 0;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #9aa0b4;
+    -fx-font-weight: 700; -fx-font-size: 12px;
+}
+.table-view .table-cell {
+    -fx-text-fill: #3a3f55;
+    -fx-font-size: 13px; -fx-padding: 12 15 12 15;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent rgba(0,0,0,0.05) transparent;
+}
+.table-row-cell { -fx-background-color: transparent; }
+.table-row-cell:odd { -fx-background-color: rgba(0,0,0,0.015); }
+.table-row-cell:hover { -fx-background-color: rgba(108,99,255,0.06); }
+.table-row-cell:selected { -fx-background-color: rgba(108,99,255,0.12); }
+.table-row-cell:selected .table-cell { -fx-text-fill: #1a1a2e; }
+
+/* ── Scroll Bar ───────────────────────────────────────────────── */
+.scroll-pane { -fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent; }
+.scroll-pane > .viewport { -fx-background-color: transparent; }
+.scroll-bar { -fx-background-color: transparent; }
+.scroll-bar .thumb { -fx-background-color: rgba(0,0,0,0.12); -fx-background-radius: 10; }
+.scroll-bar .thumb:hover { -fx-background-color: rgba(0,0,0,0.2); }
+.scroll-bar .track { -fx-background-color: transparent; }
+.scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-background-color: transparent; -fx-padding: 2; }

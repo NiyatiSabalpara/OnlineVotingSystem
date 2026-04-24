@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ui.LandingView;
+import ui.ThemeManager;
 
 public class MainApp extends Application {
 
@@ -10,9 +11,7 @@ public class MainApp extends Application {
         LandingView landing = new LandingView(stage);
 
         Scene scene = new Scene(landing.getView(), 1200, 750);
-        String cssPath = new java.io.File("src/ui/style.css").exists()
-                ? "file:src/ui/style.css" : "file:ui/style.css";
-        scene.getStylesheets().add(cssPath);
+        scene.getStylesheets().add(ThemeManager.getCssUrl());
         stage.setTitle("Pollaroid — Online Voting System");
         stage.setMinWidth(1100);
         stage.setMinHeight(680);

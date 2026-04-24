@@ -13,157 +13,128 @@ public class LoginView {
 
     private BorderPane root = new BorderPane();
     private Stage stage;
-    private String role; // "ADMIN", "CANDIDATE", "VOTER"
+    private String role;
 
     public LoginView(Stage stage, String role) {
         this.stage = stage;
-        this.role = role;
-        root.setStyle("-fx-background-color: #0d0f1a;");
+        this.role  = role;
+        root.setStyle("-fx-background-color: " + ThemeManager.bgBase() + ";");
         buildUI();
     }
 
-    // Legacy constructor (defaults to VOTER)
-    public LoginView(Stage stage) {
-        this(stage, "VOTER");
-    }
+    public LoginView(Stage stage) { this(stage, "VOTER"); }
 
     private void buildUI() {
-        // ---- LEFT BRANDING PANEL ----
-        VBox leftPanel = new VBox(30);
-        leftPanel.getStyleClass().add("login-left-panel");
+        String accentHex = role.equals("ADMIN") ? ThemeManager.accent()
+                         : role.equals("CANDIDATE") ? ThemeManager.accentCyan()
+                         : ThemeManager.accentTeal();
+        String iconText  = role.equals("ADMIN") ? "🛡️" : role.equals("CANDIDATE") ? "🎯" : "🗳️";
+        String portal    = role.equals("ADMIN") ? "Admin Portal"
+                         : role.equals("CANDIDATE") ? "Candidate Portal" : "Voter Portal";
+        String tagLine   = role.equals("ADMIN")     ? "Full system control at\nyour fingertips."
+                         : role.equals("CANDIDATE") ? "Track your campaign\nin real time."
+                         :                            "Your vote is your\nstrongest voice.";
+        String hint      = role.equals("ADMIN")     ? "ID: admin\nPassword: admin123"
+                         : role.equals("CANDIDATE") ? "cand_alice / pass1\ncand_bob / pass2\ncand_charlie / pass3"
+                         :                            "V101 / pass\nV102 / pass\n(or register)";
+
+        // ── LEFT PANEL ───────────────────────────────────────────
+        VBox leftPanel = new VBox(28);
+        leftPanel.setStyle("-fx-background-color: " + ThemeManager.bgSurface() + "; -fx-padding: 52 44 52 44;");
         leftPanel.setAlignment(Pos.CENTER_LEFT);
-        leftPanel.setPrefWidth(380);
+        leftPanel.setPrefWidth(360);
 
-        String iconText, accentColor, portalName, tagLine, hintText;
-        switch (role) {
-            case "ADMIN":
-                iconText = "🛡️";
-                accentColor = "#6c63ff";
-                portalName = "Admin Portal";
-                tagLine = "Full system control at\nyour fingertips.";
-                hintText = "Credentials:\nID: admin\nPassword: admin123";
-                break;
-            case "CANDIDATE":
-                iconText = "🎯";
-                accentColor = "#00d4ff";
-                portalName = "Candidate Portal";
-                tagLine = "Track your campaign\nin real time.";
-                hintText = "Credentials:\ncand_alice / pass1\ncand_bob / pass2\ncand_charlie / pass3";
-                break;
-            default: // VOTER
-                iconText = "🗳️";
-                accentColor = "#00e5a0";
-                portalName = "Voter Portal";
-                tagLine = "Your vote is your\nstrongest voice.";
-                hintText = "Credentials:\nV101 / pass\nV102 / pass\n(or register below)";
-        }
+        Label brand = new Label("Pollaroid.");
+        brand.setStyle("-fx-font-size: 17px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textMuted() + ";");
 
-        // Glow avatar circle
         StackPane avatarGlow = new StackPane();
-        avatarGlow.setStyle(
-                "-fx-background-color: " + accentColor + "1A; " +
-                "-fx-background-radius: 50; " +
-                "-fx-min-width: 100; -fx-min-height: 100; -fx-max-width: 100; -fx-max-height: 100; " +
-                "-fx-effect: dropshadow(gaussian, " + accentColor + "66, 30, 0, 0, 0);"
-        );
-        Label avatarIcon = new Label(iconText);
-        avatarIcon.setStyle("-fx-font-size: 44px;");
-        avatarGlow.getChildren().add(avatarIcon);
+        avatarGlow.setStyle("-fx-background-color: " + accentHex + "18; -fx-background-radius: 50; "
+                + "-fx-min-width: 96; -fx-min-height: 96; -fx-max-width: 96; -fx-max-height: 96; "
+                + "-fx-effect: dropshadow(gaussian, " + accentHex + "55, 28, 0, 0, 0);");
+        Label avaIco = new Label(iconText); avaIco.setStyle("-fx-font-size: 42px;");
+        avatarGlow.getChildren().add(avaIco);
 
-        Label portalLabel = new Label(portalName);
-        portalLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #e8eaf6;");
+        Label portalLabel = new Label(portal);
+        portalLabel.setStyle("-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
 
-        Label tagLineLabel = new Label(tagLine);
-        tagLineLabel.getStyleClass().add("login-left-tagline");
+        Label tagLabel = new Label(tagLine);
+        tagLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: " + ThemeManager.textSecondary() + "; -fx-line-spacing: 5;");
 
         // Hint box
         VBox hintBox = new VBox(6);
-        hintBox.getStyleClass().add("hint-box");
-        Label hintHeader = new Label("DEMO CREDENTIALS");
-        hintHeader.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: " + accentColor + ";");
-        Label hintContent = new Label(hintText);
-        hintContent.setStyle("-fx-font-size: 12px; -fx-text-fill: #8892b0; -fx-font-family: 'Courier New';");
-        hintBox.getChildren().addAll(hintHeader, hintContent);
+        hintBox.setStyle("-fx-background-color: " + ThemeManager.inputBg() + "; -fx-background-radius: 12; "
+                + "-fx-border-color: " + ThemeManager.inputBorder() + "; -fx-border-radius: 12; "
+                + "-fx-border-width: 1; -fx-padding: 14 16 14 16;");
+        Label hintHdr = new Label("DEMO CREDENTIALS");
+        hintHdr.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: " + accentHex + ";");
+        Label hintTxt = new Label(hint);
+        hintTxt.setStyle("-fx-font-size: 12px; -fx-text-fill: " + ThemeManager.textSecondary()
+                + "; -fx-font-family: 'Courier New';");
+        hintBox.getChildren().addAll(hintHdr, hintTxt);
 
-        // Back button
+        // Theme toggle
+        Button themeBtn = makeThemeBtn();
+        themeBtn.setOnAction(e -> ThemeManager.applyToggle(root.getScene(),
+                () -> new LoginView(stage, role).getView()));
+
         Button backBtn = new Button("← Back to Home");
-        backBtn.getStyleClass().add("btn-ghost");
+        backBtn.setStyle(ThemeManager.navNormal());
         backBtn.setOnAction(e -> root.getScene().setRoot(new LandingView(stage).getView()));
 
-        Region leftSpacer = new Region();
-        VBox.setVgrow(leftSpacer, Priority.ALWAYS);
+        Region lSpacer = new Region(); VBox.setVgrow(lSpacer, Priority.ALWAYS);
+        leftPanel.getChildren().addAll(brand, avatarGlow, portalLabel, tagLabel, hintBox, lSpacer, themeBtn, backBtn);
 
-        // Brand logo
-        Label brand = new Label("Pollaroid.");
-        brand.setStyle("-fx-font-size: 18px; -fx-font-weight: 900; -fx-text-fill: #3d4466;");
-
-        leftPanel.getChildren().addAll(brand, avatarGlow, portalLabel, tagLineLabel, hintBox, leftSpacer, backBtn);
-
-        // ---- RIGHT FORM PANEL ----
+        // ── RIGHT FORM PANEL ────────────────────────────────────
         VBox formPane = new VBox(0);
-        formPane.getStyleClass().add("login-form-pane");
+        formPane.setStyle("-fx-background-color: " + ThemeManager.bgBase() + "; -fx-padding: 56 64 56 64;");
         formPane.setAlignment(Pos.CENTER);
 
-        VBox formCard = new VBox(22);
-        formCard.setMaxWidth(380);
-        formCard.setAlignment(Pos.TOP_LEFT);
+        VBox formCard = new VBox(20);
+        formCard.setMaxWidth(370); formCard.setAlignment(Pos.TOP_LEFT);
 
         // Role badge
-        Label roleBadge = new Label(role + " LOGIN");
-        roleBadge.getStyleClass().addAll("role-badge", "role-badge-" + role.toLowerCase());
+        Label badge = new Label(role + " LOGIN");
+        badge.setStyle("-fx-font-size: 10px; -fx-font-weight: 900; -fx-text-fill: "
+                + (role.equals("VOTER") || role.equals("CANDIDATE") ? "#0d0f1a" : "white") + "; "
+                + "-fx-background-color: " + accentHex + "; -fx-background-radius: 20; -fx-padding: 4 14 4 14;");
 
         Label formTitle = new Label("Welcome back");
-        formTitle.getStyleClass().add("login-form-title");
+        formTitle.setStyle("-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
 
-        Label formSubtitle = new Label("Sign in to your " + portalName.toLowerCase() + " to continue");
-        formSubtitle.getStyleClass().add("login-form-subtitle");
+        Label formSub = new Label("Sign in to your " + portal.toLowerCase() + " to continue");
+        formSub.setStyle("-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
 
         // Fields
-        VBox idBox = new VBox(8);
-        Label idLabel = new Label("User ID");
-        idLabel.getStyleClass().add("form-label");
-        TextField idField = new TextField();
-        idField.setPromptText(role.equals("ADMIN") ? "Enter admin" : role.equals("CANDIDATE") ? "e.g. cand_alice" : "e.g. V101");
-        idField.getStyleClass().add("form-field");
-        if (!role.equals("ADMIN")) {
-            idField.getStyleClass().add(role.equals("CANDIDATE") ? "form-field-cyan" : "form-field-teal");
-        }
-        idBox.getChildren().addAll(idLabel, idField);
+        VBox idBox = fieldBox("User ID",
+                role.equals("ADMIN") ? "admin" : role.equals("CANDIDATE") ? "cand_alice" : "V101",
+                false, accentHex);
+        TextField idField = (TextField) idBox.getChildren().get(1);
 
-        VBox passBox = new VBox(8);
-        Label passLabel = new Label("Password");
-        passLabel.getStyleClass().add("form-label");
-        PasswordField passField = new PasswordField();
-        passField.setPromptText("Enter your password");
-        passField.getStyleClass().add("form-field");
-        if (!role.equals("ADMIN")) {
-            passField.getStyleClass().add(role.equals("CANDIDATE") ? "form-field-cyan" : "form-field-teal");
-        }
-        passBox.getChildren().addAll(passLabel, passField);
+        VBox passBox = fieldBox("Password", "Enter your password", true, accentHex);
+        PasswordField passField = (PasswordField) passBox.getChildren().get(1);
 
-        // Error label
         Label errorLabel = new Label("");
-        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #ff5470; -fx-font-weight: 700;");
         errorLabel.setVisible(false);
 
-        // Login button - pick correct style class
-        String btnClass = role.equals("ADMIN") ? "btn-primary-purple" :
-                          role.equals("CANDIDATE") ? "btn-primary-cyan" : "btn-primary-teal";
-        Button loginBtn = new Button("Sign In to " + portalName);
-        loginBtn.getStyleClass().add(btnClass);
+        // Primary button
+        Button loginBtn = new Button("Sign In to " + portal);
+        loginBtn.setStyle("-fx-background-color: " + accentHex + "; "
+                + "-fx-text-fill: " + (role.equals("ADMIN") ? "white" : "#0d0f1a") + "; "
+                + "-fx-font-size: 14px; -fx-font-weight: 800; -fx-background-radius: 12; "
+                + "-fx-padding: 13 0 13 0; -fx-cursor: hand; -fx-border-color: transparent;");
         loginBtn.setMaxWidth(Double.MAX_VALUE);
-
         loginBtn.setOnAction(e -> handleLogin(idField.getText(), passField.getText(), errorLabel));
         passField.setOnAction(e -> handleLogin(idField.getText(), passField.getText(), errorLabel));
 
-        formCard.getChildren().addAll(roleBadge, formTitle, formSubtitle, idBox, passBox, errorLabel, loginBtn);
+        formCard.getChildren().addAll(badge, formTitle, formSub, idBox, passBox, errorLabel, loginBtn);
 
-        // Voter-only: Register link
         if (role.equals("VOTER")) {
-            Hyperlink registerLink = new Hyperlink("New voter? Register here →");
-            registerLink.getStyleClass().add("hyperlink-text");
-            registerLink.setOnAction(e -> root.getScene().setRoot(new RegisterView(stage).getView()));
-            formCard.getChildren().add(registerLink);
+            Hyperlink rl = new Hyperlink("New voter? Register here →");
+            rl.setStyle("-fx-text-fill: " + ThemeManager.accent() + "; -fx-font-size: 13px; "
+                    + "-fx-font-weight: 600; -fx-border-color: transparent;");
+            rl.setOnAction(e -> root.getScene().setRoot(new RegisterView(stage).getView()));
+            formCard.getChildren().add(rl);
         }
 
         formPane.getChildren().add(formCard);
@@ -171,55 +142,54 @@ public class LoginView {
         root.setLeft(leftPanel);
         root.setCenter(formPane);
 
-        // Fade in
         formCard.setOpacity(0);
-        FadeTransition ft = new FadeTransition(Duration.millis(500), formCard);
-        ft.setFromValue(0); ft.setToValue(1);
-        ft.play();
+        FadeTransition ft = new FadeTransition(Duration.millis(450), formCard);
+        ft.setFromValue(0); ft.setToValue(1); ft.play();
+    }
+
+    private VBox fieldBox(String labelText, String prompt, boolean isPassword, String accentHex) {
+        VBox box = new VBox(8);
+        Label lbl = new Label(labelText);
+        lbl.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
+        Control field = isPassword ? new PasswordField() : new TextField();
+        if (field instanceof TextField) ((TextField) field).setPromptText(prompt);
+        else ((PasswordField) field).setPromptText(prompt);
+        field.setStyle("-fx-pref-height: 44px; -fx-background-color: " + ThemeManager.inputBg() + "; "
+                + "-fx-background-radius: 12; -fx-border-color: " + ThemeManager.inputBorder() + "; "
+                + "-fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 0 14 0 14; "
+                + "-fx-font-size: 14px; -fx-text-fill: " + ThemeManager.textPrimary() + "; "
+                + "-fx-prompt-text-fill: " + ThemeManager.textMuted() + ";");
+        box.getChildren().addAll(lbl, field);
+        return box;
     }
 
     private void handleLogin(String id, String password, Label errorLabel) {
-        if (id.isEmpty() || password.isEmpty()) {
-            showError(errorLabel, "Please enter your ID and password.");
-            return;
-        }
-
-        String authenticated = VoteService.getInstance().authenticate(id, password);
-
-        if (authenticated == null) {
-            showError(errorLabel, "Invalid credentials. Please try again.");
-            return;
-        }
-
-        // Role mismatch check
-        if (!authenticated.equals(role)) {
-            showError(errorLabel, "These credentials belong to the " + authenticated + " portal.");
-            return;
-        }
-
-        // Navigate based on confirmed role
-        switch (authenticated) {
-            case "ADMIN":
-                root.getScene().setRoot(new AdminDashboard(stage).getView());
-                break;
-            case "CANDIDATE":
-                root.getScene().setRoot(new CandidateDashboard(stage).getView());
-                break;
-            case "VOTER":
-                root.getScene().setRoot(new VoterDashboard(stage).getView());
-                break;
+        if (id.isBlank() || password.isBlank()) { showError(errorLabel, "Please enter your ID and password."); return; }
+        String auth = VoteService.getInstance().authenticate(id, password);
+        if (auth == null) { showError(errorLabel, "Invalid credentials. Please try again."); return; }
+        if (!auth.equals(role)) { showError(errorLabel, "These credentials belong to the " + auth + " portal."); return; }
+        switch (auth) {
+            case "ADMIN":     root.getScene().setRoot(new AdminDashboard(stage).getView()); break;
+            case "CANDIDATE": root.getScene().setRoot(new CandidateDashboard(stage).getView()); break;
+            case "VOTER":     root.getScene().setRoot(new VoterDashboard(stage).getView()); break;
         }
     }
 
-    private void showError(Label errorLabel, String message) {
-        errorLabel.setText("⚠  " + message);
-        errorLabel.setVisible(true);
-        FadeTransition ft = new FadeTransition(Duration.millis(300), errorLabel);
-        ft.setFromValue(0); ft.setToValue(1);
-        ft.play();
+    private void showError(Label lbl, String msg) {
+        lbl.setText("⚠  " + msg); lbl.setVisible(true);
+        FadeTransition ft = new FadeTransition(Duration.millis(280), lbl);
+        ft.setFromValue(0); ft.setToValue(1); ft.play();
     }
 
-    public BorderPane getView() {
-        return root;
+    private Button makeThemeBtn() {
+        Button btn = new Button(ThemeManager.toggleLabel());
+        btn.setStyle("-fx-background-color: " + ThemeManager.inputBg() + "; "
+                + "-fx-text-fill: " + ThemeManager.textSecondary() + "; "
+                + "-fx-font-size: 12px; -fx-font-weight: 700; -fx-background-radius: 20; "
+                + "-fx-border-color: " + ThemeManager.border() + "; -fx-border-radius: 20; "
+                + "-fx-border-width: 1; -fx-padding: 7 16 7 16; -fx-cursor: hand;");
+        return btn;
     }
+
+    public BorderPane getView() { return root; }
 }
