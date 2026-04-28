@@ -35,7 +35,7 @@ public class LoginView {
                          : role.equals("CANDIDATE") ? "Track your campaign\nin real time."
                          :                            "Your vote is your\nstrongest voice.";
         String hint      = role.equals("ADMIN")     ? "ID: admin\nPassword: admin123"
-                         : role.equals("CANDIDATE") ? "cand_alice / pass1\ncand_bob / pass2\ncand_charlie / pass3"
+                         : role.equals("CANDIDATE") ? "Demo IDs (pre-seeded):\ncand_alice / pass1\ncand_bob / pass2\ncand_charlie / pass3"
                          :                            "V101 / pass\nV102 / pass\n(or register)";
 
         // ── LEFT PANEL ───────────────────────────────────────────
@@ -44,7 +44,7 @@ public class LoginView {
         leftPanel.setAlignment(Pos.CENTER_LEFT);
         leftPanel.setPrefWidth(360);
 
-        Label brand = new Label("Pollaroid.");
+        Label brand = new Label("Votex.");
         brand.setStyle("-fx-font-size: 17px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textMuted() + ";");
 
         StackPane avatarGlow = new StackPane();

@@ -1,0 +1,20 @@
+{
+  "electionOpen": true,
+  "voters": [
+    {"voterId": "V101", "name": "Niyati Sabalpara", "mobile": "9999999999", "email": "niyati@example.com", "password": "pass", "hasVoted": false},
+    {"voterId": "V102", "name": "Rahul Sharma", "mobile": "8888888888", "email": "rahul@example.com", "password": "pass", "hasVoted": false},
+    {"voterId": "V103", "name": "Priya Mehta", "mobile": "7777777777", "email": "priya@example.com", "password": "pass", "hasVoted": false}
+  ],
+  "candidates": [
+    {"candidateId": 1, "name": "Alice Johnson", "party": "Progressive Alliance", "mobile": "0000000000", "voteCount": 0},
+    {"candidateId": 2, "name": "Bob Williams", "party": "National Unity Party", "mobile": "0000000000", "voteCount": 0},
+    {"candidateId": 3, "name": "Charlie Davis", "party": "Democratic Front", "mobile": "0000000000", "voteCount": 0},
+    {"candidateId": 4, "name": "Kritika", "party": "Progressive Alliance", "mobile": "7832899913", "voteCount": 0}
+  ],
+  "candidateCredentials": [
+    {"loginId": "cand_bob", "password": "pass2", "name": "Bob Williams", "mobile": "0000000000"},
+    {"loginId": "cand_charlie", "password": "pass3", "name": "Charlie Davis", "mobile": "0000000000"},
+    {"loginId": "cand_alice", "password": "pass1", "name": "Alice Johnson", "mobile": "0000000000"},
+    {"loginId": "cand_kritika", "password": "pass4", "name": "Kritika", "mobile": "7832899913"}
+  ]
+}

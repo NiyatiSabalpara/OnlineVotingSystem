@@ -4,7 +4,9 @@ import model.User;
 import model.Candidate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VoteService {
 
@@ -16,23 +18,80 @@ public class VoteService {
 
     private List<User> voters = new ArrayList<>();
     private List<Candidate> candidates = new ArrayList<>();
+    // Maps candidateLoginId -> [password, candidateName]
+    private Map<String, String[]> candidateCredentials = new HashMap<>();
     private User currentUser = null;
     private boolean electionOpen = true;
 
     private VoteService() {
         voters.add(new User("V101", "Niyati Sabalpara", "9999999999", "niyati@example.com", "pass"));
-        voters.add(new User("V102", "Rahul Sharma", "8888888888", "rahul@example.com", "pass"));
-        voters.add(new User("V103", "Priya Mehta", "7777777777", "priya@example.com", "pass"));
+        voters.add(new User("V102", "Rahul Sharma",     "8888888888", "rahul@example.com",  "pass"));
+        voters.add(new User("V103", "Priya Mehta",      "7777777777", "priya@example.com",  "pass"));
 
-        candidates.add(new Candidate(1, "Alice Johnson", "Progressive Alliance"));
-        candidates.add(new Candidate(2, "Bob Williams", "National Unity Party"));
-        candidates.add(new Candidate(3, "Charlie Davis", "Democratic Front"));
+        // Seed demo candidates (no SMS sent for demo data)
+        addCandidateInternal("Alice Johnson",  "Progressive Alliance", "0000000000", false);
+        addCandidateInternal("Bob Williams",   "National Unity Party",  "0000000000", false);
+        addCandidateInternal("Charlie Davis",  "Democratic Front",      "0000000000", false);
+
+        // Load persisted state — overrides seed data if a save file exists
+        DataStore.load(this);
+    }
+
+    /**
+     * Adds a new candidate via admin UI — auto-generates credentials and sends SMS.
+     * @return the generated login ID
+     */
+    public String addCandidate(String name, String party, String mobile) {
+        String loginId = addCandidateInternal(name, party, mobile, true);
+        DataStore.save(this);
+        return loginId;
+    }
+
+    /**
+     * Internal helper used for seeding and loading from DataStore (no SMS).
+     */
+    private String addCandidateInternal(String name, String party, String mobile, boolean sendSms) {
+        int newId = candidates.size() + 1;
+        Candidate c = new Candidate(newId, name, party, mobile);
+        candidates.add(c);
+        String firstName = name.trim().split("\\s+")[0].toLowerCase();
+        String loginId   = "cand_" + firstName;
+        String password  = "pass" + newId;
+        candidateCredentials.put(loginId, new String[]{password, name, mobile});
+        if (sendSms && mobile != null && !mobile.isBlank()) {
+            SmsService.send(mobile,
+                "Your Candidate Portal credentials — Login ID: " + loginId
+                + " | Password: " + password
+                + " | Portal: Candidate Login");
+        }
+        return loginId;
+    }
+
+    /**
+     * Removes a candidate by their ID.
+     */
+    public boolean removeCandidate(int candidateId) {
+        return candidates.removeIf(c -> c.getCandidateId() == candidateId);
+    }
+
+    /**
+     * Returns a copy of candidate credentials for display.
+     * Key = loginId, Value = [password, fullName, mobile]
+     */
+    public Map<String, String[]> getCandidateCredentials() {
+        return new HashMap<>(candidateCredentials);
+    }
+
+    /** Direct access for DataStore loading — do not call from UI. */
+    public Map<String, String[]> getCandidateCredentialsMap() {
+        return candidateCredentials;
     }
 
     public String registerVoter(String name, String mobile, String email, String password) {
         String newId = "V" + (101 + voters.size());
         User newUser = new User(newId, name, mobile, email, password);
         voters.add(newUser);
+        DataStore.save(this);
         return newId;
     }
 
@@ -44,15 +103,13 @@ public class VoteService {
             return "ADMIN";
         }
 
-        if (("cand_alice".equals(id) && "pass1".equals(password)) ||
-            ("cand_bob".equals(id) && "pass2".equals(password)) ||
-            ("cand_charlie".equals(id) && "pass3".equals(password))) {
-
-            // Set current candidate user for portal personalization
-            if ("cand_alice".equals(id)) currentUser = new User("cand_alice", "Alice Johnson", "", "", "pass1");
-            else if ("cand_bob".equals(id)) currentUser = new User("cand_bob", "Bob Williams", "", "", "pass2");
-            else if ("cand_charlie".equals(id)) currentUser = new User("cand_charlie", "Charlie Davis", "", "", "pass3");
-            return "CANDIDATE";
+        // Dynamic candidate authentication
+        if (candidateCredentials.containsKey(id)) {
+            String[] cred = candidateCredentials.get(id);
+            if (cred[0].equals(password)) {
+                currentUser = new User(id, cred[1], "", "", cred[0]);
+                return "CANDIDATE";
+            }
         }
 
         for (User u : voters) {
@@ -87,6 +144,7 @@ public class VoteService {
                 EmailService.send(currentUser.getEmail(), "Vote Confirmed",
                         "Hello " + currentUser.getName() + ",\nYour vote has been successfully cast.\nThank you!");
 
+                DataStore.save(this);
                 return true;
             }
         }
@@ -100,6 +158,12 @@ public class VoteService {
     }
 
     public void setElectionOpen(boolean open) {
+        this.electionOpen = open;
+        DataStore.save(this);
+    }
+
+    /** Used by DataStore only — does not trigger a save. */
+    public void setElectionOpenInternal(boolean open) {
         this.electionOpen = open;
     }
 

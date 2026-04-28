@@ -38,7 +38,7 @@ public class LandingView {
 
         HBox brandBox = new HBox(0);
         brandBox.setAlignment(Pos.CENTER_LEFT);
-        Label bl = new Label("Pollaroid");
+        Label bl = new Label("Votex");
         bl.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
         Label bd = new Label(".");
         bd.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.accent() + ";");
@@ -112,7 +112,7 @@ public class LandingView {
         footer.setAlignment(Pos.CENTER);
         footer.setPadding(new Insets(12));
         footer.setStyle("-fx-background-color: transparent;");
-        Label footerTxt = new Label("© 2026 Pollaroid — Built for transparent democracy");
+        Label footerTxt = new Label("© 2026 Votex — Built for transparent democracy");
         footerTxt.setStyle("-fx-font-size: 11px; -fx-text-fill: " + ThemeManager.textMuted() + ";");
         footer.getChildren().add(footerTxt);
 

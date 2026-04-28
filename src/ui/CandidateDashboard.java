@@ -51,7 +51,7 @@ public class CandidateDashboard {
 
         HBox brand = new HBox(0); brand.setAlignment(Pos.CENTER_LEFT);
         brand.setPadding(new Insets(24, 20, 20, 20));
-        Label bl = new Label("Pollaroid");
+        Label bl = new Label("Votex");
         bl.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
         Label bd = new Label(".");
         bd.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + accentHex + ";");

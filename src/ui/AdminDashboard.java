@@ -5,15 +5,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Candidate;
 import model.User;
 import service.VoteService;
+import javafx.scene.layout.FlowPane;
 
 public class AdminDashboard {
 
@@ -39,7 +42,7 @@ public class AdminDashboard {
         HBox brandBox = new HBox(0);
         brandBox.setAlignment(Pos.CENTER_LEFT);
         brandBox.setPadding(new Insets(24, 20, 20, 20));
-        Label bl = new Label("Pollaroid");
+        Label bl = new Label("Votex");
         bl.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
         Label bd = new Label(".");
         bd.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.accent() + ";");
@@ -320,16 +323,39 @@ public class AdminDashboard {
     // ── PANEL 4: CANDIDATES ──────────────────────────────────────────
     private VBox buildCandidatesPanel() {
         VBox panel = panelBase();
-        VBox hdr = new VBox(4);
-        hdr(hdr, "Candidates", "All registered candidates with live vote standings.");
 
+        // Header row: title + Add button
+        HBox topRow = new HBox(12);
+        topRow.setAlignment(Pos.CENTER_LEFT);
+        VBox hdrBox = new VBox(4);
+        hdr(hdrBox, "Candidates", "All registered candidates with live vote standings.");
+        HBox.setHgrow(hdrBox, Priority.ALWAYS);
+
+        Button addBtn = new Button("＋  Add Candidate");
+        addBtn.setStyle("-fx-background-color: " + ThemeManager.accent() + "; "
+                + "-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 800; "
+                + "-fx-background-radius: 10; -fx-padding: 10 20 10 20; -fx-cursor: hand; "
+                + "-fx-border-color: transparent;");
+        addBtn.setOnMouseEntered(e -> addBtn.setStyle("-fx-background-color: derive("
+                + ThemeManager.accent() + ", -15%); "
+                + "-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 800; "
+                + "-fx-background-radius: 10; -fx-padding: 10 20 10 20; -fx-cursor: hand; "
+                + "-fx-border-color: transparent;"));
+        addBtn.setOnMouseExited(e -> addBtn.setStyle("-fx-background-color: " + ThemeManager.accent() + "; "
+                + "-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 800; "
+                + "-fx-background-radius: 10; -fx-padding: 10 20 10 20; -fx-cursor: hand; "
+                + "-fx-border-color: transparent;"));
+        addBtn.setOnAction(e -> showAddCandidateDialog());
+        topRow.getChildren().addAll(hdrBox, addBtn);
+
+        // Candidate cards
         int total = VoteService.getInstance().getTotalVotesCast();
         String[] clrs = {ThemeManager.accent(), ThemeManager.accentCyan(), ThemeManager.accentTeal()};
         String[] icons = {"🟣","🔵","🟢"};
         String[] bgs   = {ThemeManager.adminAccentBg(), ThemeManager.candidateAccentBg(), ThemeManager.voterAccentBg()};
         String[] pbcls = {"vote-progress-bar","vote-progress-bar-cyan","vote-progress-bar-teal"};
 
-        HBox grid = new HBox(16); grid.setAlignment(Pos.TOP_LEFT);
+        FlowPane grid = new FlowPane(16, 16); grid.setAlignment(Pos.TOP_LEFT);
         int ci = 0;
         for (Candidate c : VoteService.getInstance().getCandidates()) {
             VBox card = glass(); card.setPrefWidth(238); card.setAlignment(Pos.TOP_LEFT);
@@ -355,8 +381,200 @@ public class AdminDashboard {
             card.getChildren().addAll(av, cn, cp, dv, vRow, pb);
             grid.getChildren().add(card); ci++;
         }
-        panel.getChildren().addAll(hdr, grid);
+        panel.getChildren().addAll(topRow, grid);
         return panel;
+    }
+
+    // ── ADD CANDIDATE DIALOG ─────────────────────────────────────────
+    private void showAddCandidateDialog() {
+        Stage dialog = new Stage();
+        dialog.initOwner(stage);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Add New Candidate");
+        dialog.setResizable(false);
+
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(30));
+        root.setStyle("-fx-background-color: " + ThemeManager.bgBase() + ";");
+        root.setPrefWidth(420);
+
+        // Title
+        Label title = new Label("🧑  Add New Candidate");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        Label subtitle = new Label("Enter the candidate's details. Login credentials will be auto-generated and sent via SMS.");
+        subtitle.setStyle("-fx-font-size: 12px; -fx-text-fill: " + ThemeManager.textSecondary()
+                + "; -fx-wrap-text: true;");
+        subtitle.setMaxWidth(360);
+
+        Region divHdr = new Region();
+        divHdr.setStyle("-fx-background-color: " + ThemeManager.divider() + "; -fx-min-height: 1; -fx-max-height: 1;");
+
+        // Name field
+        Label nameLabel = new Label("Full Name");
+        nameLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
+        TextField nameField = new TextField();
+        nameField.setPromptText("e.g. Diana Prince");
+        nameField.setStyle("-fx-pref-height: 40px; -fx-background-color: " + ThemeManager.inputBg()
+                + "; -fx-background-radius: 10; -fx-border-color: " + ThemeManager.inputBorder()
+                + "; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 0 12 0 12; "
+                + "-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+
+        // Party field
+        Label partyLabel = new Label("Party / Affiliation");
+        partyLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
+        TextField partyField = new TextField();
+        partyField.setPromptText("e.g. Freedom Party");
+        partyField.setStyle("-fx-pref-height: 40px; -fx-background-color: " + ThemeManager.inputBg()
+                + "; -fx-background-radius: 10; -fx-border-color: " + ThemeManager.inputBorder()
+                + "; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 0 12 0 12; "
+                + "-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+
+        // Mobile field
+        Label mobileLabel = new Label("Mobile Number");
+        mobileLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + ";");
+        TextField mobileField = new TextField();
+        mobileField.setPromptText("10-digit number, e.g. 9876543210");
+        mobileField.setStyle("-fx-pref-height: 40px; -fx-background-color: " + ThemeManager.inputBg()
+                + "; -fx-background-radius: 10; -fx-border-color: " + ThemeManager.inputBorder()
+                + "; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 0 12 0 12; "
+                + "-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        // Allow only digits in the mobile field
+        mobileField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) mobileField.setText(newVal.replaceAll("[^\\d]", ""));
+            if (mobileField.getText().length() > 10)
+                mobileField.setText(mobileField.getText().substring(0, 10));
+        });
+
+        // Error label
+        Label errorLabel = new Label("");
+        errorLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #ff5470;");
+
+        // Buttons
+        HBox btnRow = new HBox(12); btnRow.setAlignment(Pos.CENTER_RIGHT);
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setStyle("-fx-background-color: " + ThemeManager.inputBg() + "; "
+                + "-fx-text-fill: " + ThemeManager.textSecondary() + "; -fx-font-size: 13px; "
+                + "-fx-font-weight: 700; -fx-background-radius: 10; -fx-border-color: "
+                + ThemeManager.border() + "; -fx-border-radius: 10; -fx-border-width: 1; "
+                + "-fx-padding: 10 20 10 20; -fx-cursor: hand;");
+        cancelBtn.setOnAction(e -> dialog.close());
+
+        Button submitBtn = new Button("Add Candidate");
+        submitBtn.setStyle("-fx-background-color: " + ThemeManager.accent() + "; "
+                + "-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 800; "
+                + "-fx-background-radius: 10; -fx-padding: 10 20 10 20; -fx-cursor: hand; "
+                + "-fx-border-color: transparent;");
+        submitBtn.setDefaultButton(true);
+        submitBtn.setOnAction(e -> {
+            String name   = nameField.getText().trim();
+            String party  = partyField.getText().trim();
+            String mobile = mobileField.getText().trim();
+            if (name.isEmpty()) {
+                errorLabel.setText("⚠  Full name is required.");
+                return;
+            }
+            if (party.isEmpty()) {
+                errorLabel.setText("⚠  Party / Affiliation is required.");
+                return;
+            }
+            if (!mobile.matches("\\d{10}")) {
+                errorLabel.setText("⚠  Enter a valid 10-digit mobile number.");
+                return;
+            }
+            String loginId  = VoteService.getInstance().addCandidate(name, party, mobile);
+            int    id       = VoteService.getInstance().getCandidates().size();
+            String password = "pass" + id;
+            dialog.close();
+            showCredentialsDialog(name, party, loginId, password, mobile);
+            // Refresh the candidates panel
+            setActiveNav(3);
+            showPanel(buildCandidatesPanel());
+        });
+
+        btnRow.getChildren().addAll(cancelBtn, submitBtn);
+
+        root.getChildren().addAll(title, subtitle, divHdr,
+                nameLabel, nameField, partyLabel, partyField,
+                mobileLabel, mobileField,
+                errorLabel, btnRow);
+
+        Scene dialogScene = new Scene(root);
+        dialogScene.getStylesheets().add(ThemeManager.getCssUrl());
+        dialog.setScene(dialogScene);
+        dialog.showAndWait();
+    }
+
+    /** Shows the auto-generated credentials after adding a candidate. */
+    private void showCredentialsDialog(String name, String party, String loginId, String password, String mobile) {
+        Stage info = new Stage();
+        info.initOwner(stage);
+        info.initModality(Modality.APPLICATION_MODAL);
+        info.setTitle("Candidate Added");
+        info.setResizable(false);
+
+        VBox root = new VBox(16);
+        root.setPadding(new Insets(30));
+        root.setStyle("-fx-background-color: " + ThemeManager.bgBase() + ";");
+        root.setPrefWidth(420);
+
+        Label title = new Label("✅  Candidate Added!");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: 900; -fx-text-fill: #00e5a0;");
+
+        Label desc = new Label(name + " has been registered as a candidate for " + party + ".");
+        desc.setStyle("-fx-font-size: 13px; -fx-text-fill: " + ThemeManager.textSecondary()
+                + "; -fx-wrap-text: true;");
+        desc.setMaxWidth(360);
+
+        VBox credBox = new VBox(10);
+        credBox.setStyle("-fx-background-color: " + ThemeManager.cardBg() + "; -fx-background-radius: 12; "
+                + "-fx-border-color: " + ThemeManager.border() + "; -fx-border-radius: 12; "
+                + "-fx-border-width: 1; -fx-padding: 16;");
+        Label credTitle = new Label("🔑  Auto-Generated Login Credentials");
+        credTitle.setStyle("-fx-font-size: 13px; -fx-font-weight: 800; -fx-text-fill: " + ThemeManager.textPrimary() + ";");
+        Label note = new Label("Credentials have been sent via SMS to " + mobile + ". The candidate can log in via the Candidate portal.");
+        note.setStyle("-fx-font-size: 11px; -fx-text-fill: " + ThemeManager.textMuted()
+                + "; -fx-wrap-text: true;");
+        note.setMaxWidth(360);
+
+        HBox idRow = new HBox(12); idRow.setAlignment(Pos.CENTER_LEFT);
+        Label idLbl = new Label("Login ID:");
+        idLbl.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + "; -fx-min-width: 90;");
+        Label idVal = new Label(loginId);
+        idVal.setStyle("-fx-font-size: 14px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.accent() + ";");
+        idRow.getChildren().addAll(idLbl, idVal);
+
+        HBox pwRow = new HBox(12); pwRow.setAlignment(Pos.CENTER_LEFT);
+        Label pwLbl = new Label("Password:");
+        pwLbl.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + "; -fx-min-width: 90;");
+        Label pwVal = new Label(password);
+        pwVal.setStyle("-fx-font-size: 14px; -fx-font-weight: 900; -fx-text-fill: " + ThemeManager.accentCyan() + ";");
+        pwRow.getChildren().addAll(pwLbl, pwVal);
+
+        HBox mobRow = new HBox(12); mobRow.setAlignment(Pos.CENTER_LEFT);
+        Label mobLbl = new Label("SMS sent to:");
+        mobLbl.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: " + ThemeManager.textSecondary() + "; -fx-min-width: 90;");
+        Label mobVal = new Label(mobile);
+        mobVal.setStyle("-fx-font-size: 14px; -fx-font-weight: 900; -fx-text-fill: #00c98a;");
+        mobRow.getChildren().addAll(mobLbl, mobVal);
+
+        credBox.getChildren().addAll(credTitle, note, idRow, pwRow, mobRow);
+
+        Button closeBtn = new Button("Got it!");
+        closeBtn.setStyle("-fx-background-color: " + ThemeManager.accent() + "; "
+                + "-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 800; "
+                + "-fx-background-radius: 10; -fx-padding: 10 28 10 28; -fx-cursor: hand; "
+                + "-fx-border-color: transparent;");
+        closeBtn.setDefaultButton(true);
+        closeBtn.setOnAction(e -> info.close());
+        HBox btnRow = new HBox(); btnRow.setAlignment(Pos.CENTER_RIGHT);
+        btnRow.getChildren().add(closeBtn);
+
+        root.getChildren().addAll(title, desc, credBox, btnRow);
+
+        Scene sc = new Scene(root);
+        sc.getStylesheets().add(ThemeManager.getCssUrl());
+        info.setScene(sc);
+        info.showAndWait();
     }
 
     // ── PANEL 5: LIVE RESULTS ────────────────────────────────────────
